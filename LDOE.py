@@ -41,6 +41,8 @@ if __name__ == '__main__':
 
         procedure.vider_sac()
 
+        procedure.reorganize_items_food()
+
         procedure.carpet()
 
         procedure.go_to_farm()
