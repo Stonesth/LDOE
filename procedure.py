@@ -12,6 +12,40 @@ import datetime
 
 import multiprocessing
 
+def reorganize_items_food() :
+    # Déplacer le personnage a la position ou ce trouve le coffre ou tout les objets pour s'équiper son
+    movement(225, 770, 0.5)
+
+    # Ouvre le coffre
+    pushTheAction("main", 50, 50)
+
+    # Prendre les carottes, carottes_preparee, baies qui restent.
+    dragAndDropObject("carottes_cuisinee", 50, 50, "right")
+    dragAndDropObject("carottes_cuisinee", 50, 50, "right")
+
+    dragAndDropObject("baies", 50, 50, "right")
+    dragAndDropObject("baies", 50, 50, "right")
+
+    # Ferme l'équipement
+    pushTheAction("croix", 50, 50)
+
+    # Doit aller au frigo
+    movement(330, 770, 1.50)
+
+    # Ouvrir le frigo
+    pushTheAction("main", 50, 50)
+
+    # Trouver les baies
+    dragAndDropObject("carottes_cuisinee", 50, 50, "left")
+    dragAndDropObject("carottes_cuisinee", 50, 50, "left")
+    dragAndDropObject("baies", 50, 50, "left")
+    dragAndDropObject("baies", 50, 50, "left")
+
+    # Fermer le frigo
+    pushTheAction("croix", 50, 50)
+
+
+
 def graines() :
     take_graines_charbons()
 
