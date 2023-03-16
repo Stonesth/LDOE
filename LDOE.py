@@ -19,7 +19,7 @@ if __name__ == '__main__':
     if not debug : 
         procedure.startApplication()
 
-    for i in range(1):
+    for i in range(0):
 
         # For testing without restart the application each time
         time.sleep(1)
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
         procedure.carpet()
 
-        # procedure.boite_inconue()
+        procedure.boite_inconue()
 
         procedure.graines()
 
@@ -73,7 +73,10 @@ if __name__ == '__main__':
     # # Remonter l'allée jusqu'au établis de bois
 
     # procedure.go_to_farm()
-    # # procedure.boite_inconue()
+    # procedure.boite_inconue()
+
+    procedure.reorganize_items_food()
+
 
     # # procedure.carpet()
 
