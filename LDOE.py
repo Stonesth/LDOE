@@ -29,19 +29,20 @@ if __name__ == '__main__':
         # Je dois vider mon sac
         time.sleep(8)
 
-        procedure.vider_sac()
+        procedure.reorganize_items_food()
+        # procedure.boite_inconue()
 
         procedure.carpet()
 
-        procedure.boite_inconue()
+        procedure.vider_sac()
+
+        procedure.carpet()
 
         procedure.graines()
 
         procedure.carpet()
 
         procedure.vider_sac()
-
-        procedure.reorganize_items_food()
 
         procedure.carpet()
 
@@ -73,11 +74,11 @@ if __name__ == '__main__':
 
     time.sleep(1)
     # # Remonter l'allée jusqu'au établis de bois
-
+    # procedure.go_to_calcaire()
     # procedure.go_to_farm()
     # procedure.boite_inconue()
 
-    procedure.reorganize_items_food()
+    # procedure.reorganize_items_food()
 
 
     # # procedure.carpet()

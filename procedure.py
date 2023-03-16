@@ -146,29 +146,16 @@ def wait_until_next_action (minutes) :
 
     subprocess.call('killall caffeinate', shell=True)
 
-def go_to_farm() :
 
-    # je dois équipper mon personnage
-    equip_yourself()
-
-    # Quitter la zone pour aller farmer, après avoir mis dans le recycleur
-    # Déplacer le personnage vers la position pour partir
-    movement(250, 757, 8)
-
-    time.sleep(5)
-
-    # try to avoid the pub
-    pyautogui.click(1207, 719, button ='left') 
+def go_to_calcaire() :
+    # # try to avoid the pub
+    # pyautogui.click(1207, 719, button ='left') 
 
     # Je dois fermer les popups 
-    pushTheAction_2("fermer", -50, -50)
-    pushTheAction_2("fermer", -50, -50)
-    pushTheAction_2("fermer", -50, -50)
+    pushTheAction_2("fermer", 50, 50)
 
     # Je dois fermer les popups 
-    pushTheAction_2("plus_tard", -50, -50)
-    pushTheAction_2("plus_tard", -50, -50)
-    pushTheAction_2("plus_tard", -50, -50)
+    pushTheAction_2("plus_tard", 50, 50)
 
     # pyautogui.click(200, 200, button ='left') 
     # pushTheAction("calcaire", 50, 50)
@@ -185,6 +172,19 @@ def go_to_farm() :
         except Exception as e:
             # afficher l'exception, mais ne rien faire d'autre
             print(e) 
+
+def go_to_farm() :
+
+    # je dois équipper mon personnage
+    equip_yourself()
+
+    # Quitter la zone pour aller farmer, après avoir mis dans le recycleur
+    # Déplacer le personnage vers la position pour partir
+    movement(250, 757, 8)
+
+    time.sleep(5)
+
+    go_to_calcaire()
 
     # Normally Need to wait 11 minutes pour arriver
     time.sleep(2)
@@ -319,14 +319,10 @@ def back_to_home() :
     time.sleep(7)
 
     # Je dois fermer les popups 
-    pushTheAction_2("fermer", -50, -50)
-    pushTheAction_2("fermer", -50, -50)
-    pushTheAction_2("fermer", -50, -50)
+    pushTheAction_2("fermer", 50, 50)
 
     # Je dois fermer les popups 
-    pushTheAction_2("plus_tard", -50, -50)
-    pushTheAction_2("plus_tard", -50, -50)
-    pushTheAction_2("plus_tard", -50, -50)
+    pushTheAction_2("plus_tard", 50, 50)
 
     # Need to test if you return or not to home
     while True :
@@ -339,7 +335,6 @@ def back_to_home() :
         except Exception as e:
             # afficher l'exception, mais ne rien faire d'autre
             print(e) 
-
 
 def farm() :
     print ("Farme the field")
@@ -1030,8 +1025,9 @@ def pushTheAction_2 (dossier, x_plus, y_plus) :
         if dossier == "fermer" :
             print("Pas de popup à fermer, continuer")
         elif dossier == "plus_tard" :
-            print("Pas de popup à fermer, continuer")
+            print("Pas de popup à mettre plus tard, continuer")
         else :
+            print("Image not found : " + dossier)
             i = 1
             while os.path.exists("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/" + dossier + "/" + dossier + "_" + str(i) + ".png"):
                 i += 1
@@ -1368,6 +1364,23 @@ def stay_in_live() :
     except Exception as e:
         # afficher l'exception, mais ne rien faire d'autre
         print(e) 
+
+
+def test_if_still_food() :
+    now = datetime.datetime.now()
+    print("La date et l'heure actuelles sont :", now)
+    # Sauvegarde la capture d'écran avant le raise de l'erreur
+    screenshot = pyautogui.screenshot()
+    screenshot = np.array(screenshot)
+    x1, y1, x2, y2 = 1140*2, 540*2, 1340*2, 555*2
+    cropped_screenshot = screenshot[y1:y2, x1:x2, :]
+
+    cv2.imwrite("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/foods.png", cropped_screenshot)
+
+    # Chargement de l'image
+    img = cv2.imread('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/live.png')
+
+
 
 def live_in_the_field() : 
     while True :
