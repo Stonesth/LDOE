@@ -351,6 +351,7 @@ def farm() :
         try : 
             if live < 69 :
                 break
+            
 
             if need_tools("need_tools", 50, 50) == "Inventory_full" :
                 break
@@ -901,14 +902,14 @@ def boite_inconue() :
 
     pushTheAction_2("boite_inconnue", 50, 50)
     
-    x, y = 1260, 170
+    x, y = 900, 170
     # Clique le plus à droite possible
     pyautogui.click(x, y, button ='left') 
 
     # Bouger à gauche
     pyautogui.dragRel(80-x, 170-y, duration=1, button='left')
     
-    x, y = 1260, 170
+    x, y = 800, 170
     # Clique le plus à droite possible
     pyautogui.click(x, y, button ='left') 
 
@@ -930,7 +931,7 @@ def boite_inconue() :
             # afficher l'exception, mais ne rien faire d'autre
             print(e) 
 
-    time.sleep(40)
+    time.sleep(60)
 
     try :
         pushTheAction_2("croix_pub", 50, 50)
@@ -1365,20 +1366,95 @@ def stay_in_live() :
         # afficher l'exception, mais ne rien faire d'autre
         print(e) 
 
+def take_food_from_sac() :
+    
+    # Ouvre l'équipement
+    pushTheAction("sac", 50, 50)
 
-def test_if_still_food() :
+    dragAndDropObject("baies", 50, 50, "left")
+
+    # Ferme l'équipement
+    pushTheAction("croix", 50, 50)
+
+
+def test_if_still_food(dossier) :
+    # Capture d'écran partielle
+    x1, y1, x2, y2 = 1200*2, 550*2, 1400*2, 640*2
+    screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
+
+    image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
+    image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
+
+    find_image = False
+    for filepath in image_paths:
+        # Lecture de l'image modèle
+    # Lecture de l'image modèle
+    # template = cv2.imread("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/template.png")
+        template = cv2.imread(filepath)
+
+        # Afficher la taille de l'image
+        print("Taille de l'image template : ", template.shape)
+        print("Taille de l'image screenshot : ", screenshot.shape)
+
+        # Conversion en niveaux de gris
+        gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+        gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+        # Récupération des dimensions de l'image modèle
+        h, w = gray_template.shape
+
+        # Correspondance de modèle
+        result = cv2.matchTemplate(gray_screenshot, gray_template, cv2.TM_CCOEFF_NORMED)
+
+        # Récupération de la position de la correspondance maximale
+        _, _, min_loc, max_loc = cv2.minMaxLoc(result)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+
+        print (str(max_loc))
+        print (str(min_loc))
+        print (str(max_val))
+
+        if max_val >= 0.8:
+            find_image = True
+            break
+
+        # # Affichage de la correspondance maximale
+        # cv2.rectangle(screenshot, max_loc, (max_loc[0] + w, max_loc[1] + h), (0, 0, 255), 2)
+
+        # # Affichage de l'image résultat
+        # cv2.imshow("Result", screenshot)
+        # cv2.waitKey(0)
+
+    return find_image
+
+
+def test_if_still_food_2(dossier) :
     now = datetime.datetime.now()
     print("La date et l'heure actuelles sont :", now)
     # Sauvegarde la capture d'écran avant le raise de l'erreur
     screenshot = pyautogui.screenshot()
     screenshot = np.array(screenshot)
-    x1, y1, x2, y2 = 1140*2, 540*2, 1340*2, 555*2
+    # You need to dubbled the value
+    x1, y1, x2, y2 = 1200*2, 550*2, 1400*2, 640*2
     cropped_screenshot = screenshot[y1:y2, x1:x2, :]
 
     cv2.imwrite("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/foods.png", cropped_screenshot)
 
-    # Chargement de l'image
-    img = cv2.imread('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/live.png')
+    image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
+    image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
+    
+    find_image = False
+    for filepath in image_paths:
+        image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+    
+        result = cv2.matchTemplate(screenshot, image, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+
+        if max_val >= 0.8:
+            find_image = True
+            break
+    
+    return find_image
 
 
 
@@ -1387,7 +1463,9 @@ def live_in_the_field() :
         live = extract_live()
         
         try : 
-            if live < 70 :
+            if not test_if_still_food("foods") :
+                take_food_from_sac()
+            elif live < 70 :
                 for i in range (0,3) :
                     pushTheAction("food", 50, 50)
                     time.sleep(1)
@@ -1398,10 +1476,12 @@ def live_in_the_field() :
                 print("Je vais devoir prendre de la nouriture")
                 for i in range (0,2) :
                     pushTheAction("food", 50, 50)
+                    time.sleep(1)
             elif live < 100 :
                 print("Je vais devoir prendre de la nouriture")
                 for i in range (0,1) :
                     pushTheAction("food", 50, 50)
+                    time.sleep(1)
         
         except Exception as e:
             # afficher l'exception, mais ne rien faire d'autre
