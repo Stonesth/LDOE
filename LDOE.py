@@ -150,13 +150,13 @@ if __name__ == '__main__':
         pyautogui.hotkey('command', 'tab')
         time.sleep(1)
 
+    # # time.sleep(1)
+    # pyautogui.click(800, 400, button ='left') 
+    # pyautogui.hotkey('command', 'tab')
     # time.sleep(1)
-    pyautogui.click(800, 400, button ='left') 
-    pyautogui.hotkey('command', 'tab')
-    time.sleep(1)
 
 
-    procedure.farm_and_back_to_home()
+    # procedure.farm_and_back_to_home()
 
     # procedure.farm_and_back_to_home()
     # procedure.carpet()
