@@ -11,9 +11,9 @@ from multiprocessing import freeze_support
 import procedure as procedure
 
 
-debug = False
-number_of_time_to_do = 15
-
+debug = True
+number_of_time_to_do = 0
+ 
 
 if __name__ == '__main__':
     freeze_support()
@@ -38,11 +38,18 @@ if __name__ == '__main__':
         procedure.prendre_equipement_used()
         procedure.vider_equipement_poche()
 
-        procedure.movement(206, 706, 0.65) # -- procedure.carpet()
+        procedure.movement(216, 688, 0.7)
+
+        procedure.recycle()
+        # -- procedure.carpet()
+        time.sleep(1)
+        procedure.movement(201, 668, 0.7)
+        time.sleep(1)
+        procedure.movement(285, 678, 0.6)
         
         procedure.take_water()
 
-        procedure.boire()
+        procedure.boire(2)
 
         procedure.toilette()
 
@@ -56,13 +63,6 @@ if __name__ == '__main__':
         time.sleep(1)
         procedure.movement(253, 702, 1.2)
 
-        procedure.recycle()
-        # -- procedure.carpet()
-        time.sleep(1)
-        procedure.movement(201, 668, 0.7)
-        time.sleep(1)
-        procedure.movement(285, 678, 0.5)
-
         procedure.reorganize_items_food()
 
         # -- procedure.carpet()
@@ -70,6 +70,8 @@ if __name__ == '__main__':
         procedure.movement(249, 678, 1.2)
         time.sleep(1)
         procedure.movement(285, 678, 0.7)
+
+        procedure.vider_sac()
 
         time.sleep(0)
         procedure.reorganize_items_items()
@@ -115,6 +117,11 @@ if __name__ == '__main__':
         procedure.movement(336, 661, 1.0)
         procedure.movement(336, 698, 0.63)
         
+        procedure.vider_sac()
+        procedure.movement(340, 653, 0.3)
+
+        # need to wait 5 mins
+        # procedure.wait_until_next_action(5)
         procedure.recycle()
 
         # # -- procedure.carpet()
@@ -130,7 +137,6 @@ if __name__ == '__main__':
         procedure.startApplication()
 
         procedure.farm_and_back_to_home()
-
 
         # # Je dois attendre 11 minutes
         procedure.stopApplication()
@@ -150,100 +156,26 @@ if __name__ == '__main__':
         pyautogui.hotkey('command', 'tab')
         time.sleep(1)
 
-    # # time.sleep(1)
-    # pyautogui.click(800, 400, button ='left') 
-    # pyautogui.hotkey('command', 'tab')
-    # time.sleep(1)
+    time.sleep(1)
+    pyautogui.click(800, 400, button ='left') 
+    pyautogui.hotkey('command', 'tab')
+    time.sleep(1)
 
-
-    # procedure.farm_and_back_to_home()
-
-    # procedure.farm_and_back_to_home()
-    # procedure.carpet()
-    # procedure.go_to_farm()
-
-    # Quitter la zone pour aller farmer, après avoir mis dans le recycleur
-    # Déplacer le personnage vers la position pour partir
-    # procedure.movement(250, 757, 8)
-
-    # time.sleep(5)
-
-    # procedure.go_to_calcaire()
-
-    # procedure.carpet()
-    # # procedure.equip_yourself()
-    # procedure.metal()
-    # procedure.go_to_etabli_metal2()
-
-    # Aller aux autres coffres
-    # procedure.movement(315, 650, 0.5)
-    # procedure.go_to_coffre_items() 
-    # Je dois prendre de la pierre et du bois dans le coffre
-    # procedure.carpet()
-    # procedure.movement(313, 690, 0.25)
-    # procedure.create_suit()   
-    # procedure.dress_suit()
-    # procedure.vider_sac()
-    # procedure.prendre_equipement_used()
-    # procedure.vider_equipement_poche()
-
-    # # procedure.boite_inconue()
-
-    # # Je dois vider mon sac
-    # procedure.vider_sac()
-
-    # procedure.reorganize_items_food()
-
-    # procedure.carpet()
-
-    # procedure.graines()
-
-    # procedure.carpet()
-
-    # procedure.vider_sac()
-
-    # procedure.carpet()
-
-    # # Remplir les établis
-    # procedure.remplir_etablis()
-
-    # procedure.carpet()
-
-    # procedure.vider_sac()
-
-    # procedure.carpet()
-
-    # procedure.recycle()
-
-    # procedure.carpet()
-
-
-    # # procedure.go_to_farm()
     
-
-    # # procedure.farm_field()
-    # # procedure.farm()
-    # # procedure.test_if_stay_same_place(550, 330, 800, 670, 0.30)
-
-    # # procedure.test_if_find_image("plus_tard", 660, 590, 810, 645)
-    # # procedure.go_to_calcaire()
-    
-
     # procedure.go_to_farm()
 
     # # Normally Need to wait 11 minutes pour arriver
     # time.sleep(2)
     # procedure.stopApplication()
-    # time.sleep(10)
+    # procedure.wait_until_next_action(11)
     # procedure.startApplication()
 
-    # # # Je dois attendre 11 minutes
-    # procedure.stopApplication()
-    # time.sleep(10)
-    # procedure.startApplication()
-    # time.sleep(10)
+    # procedure.farm_and_back_to_home()
 
-    # # Je dois entrer dans la ville
-    # time.sleep(1)
-    # procedure.pushTheAction("entrer", 50, 50)
-    # time.sleep(8)
+    procedure.farm_field()
+
+    # procedure.create_equipment()
+    # procedure.create_and_dress_suit()
+    # procedure.take_materiaux()
+
+    # procedure.dress_suit()

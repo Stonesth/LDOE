@@ -95,7 +95,7 @@ def place_food_fridge() :
 
 
 def take_water() :
-    movement(368, 709, 1.00)
+    movement(368, 709, 1.10)
 
     movement(358, 640, 1.80)
 
@@ -113,7 +113,7 @@ def take_water() :
     pushTheAction("croix", 50, 50)
 
 # We need to used this procedure after take_water()
-def boire():
+def boire(number):
     print ("boire")
 
     # Ouvre l'équipement
@@ -122,20 +122,9 @@ def boire():
 
     click_images_side("eau", 50, 50, "left")
 
+    for i in range (0,number) :
     # click sur UTILISER * 13 => pipi
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
-    click_images("utiliser", 115, 720, 300, 790)
+        click_images("utiliser", 115, 720, 300, 790)
 
     # Fermer l'équipement
     pushTheAction("croix", 50, 50)
@@ -167,37 +156,63 @@ def douche() :
 
 
 def take_items_reorganize() :
-    # Déplacer le personnage a la position ou ce trouve le coffre ou tout les objets pour s'équiper son
-    movement(225, 770, 0.5)
 
     # Ouvre le coffre
     pushTheAction("main", 50, 50)
 
     # Prendre les resources
     dragAndDropObject("herbes", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("tissus", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("corde", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
 
     dragAndDropObject("piles", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("telephone", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("usb", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("lampe", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("ampoule", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("montre", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
 
     dragAndDropObject("transistor", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("caoutchouc", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("roulement", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("vis", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
 
     # Ferme l'équipement
     pushTheAction("croix", 50, 50)
 
 def go_to_coffre_tissu_corde() :
     
+    movement(265, 711, 0.2)
+
     # Aller aux ateliers de couture
     time.sleep(0)
-    movement(146, 800, 1.65)
+    movement(146, 800, 1.71)
 
     time.sleep(0)
     # Aller aux coffres
@@ -312,6 +327,8 @@ def go_to_coffre_items() :
 
 def reorganize_items_items() :
     take_items_reorganize()
+    
+    
 
     go_to_coffre_tissu_corde()
 
@@ -331,11 +348,14 @@ def reorganize_items_food() :
     dragAndDropObject("baies", 50, 50, "right")
     dragAndDropObject("baies", 50, 50, "right")
 
+    dragAndDropObject("carottes", 50, 50, "right")
+    dragAndDropObject("carottes", 50, 50, "right")
+
     # Ferme l'équipement
     pushTheAction("croix", 50, 50)
 
     # Doit aller au frigo
-    movement(330, 770, 1.50)
+    movement(330, 770, 1.4)
 
     # Ouvrir le frigo
     pushTheAction("main", 50, 50)
@@ -345,6 +365,10 @@ def reorganize_items_food() :
     dragAndDropObject("carottes_cuisinee", 50, 50, "left")
     dragAndDropObject("baies", 50, 50, "left")
     dragAndDropObject("baies", 50, 50, "left")
+    dragAndDropObject("carottes", 50, 50, "left")
+    dragAndDropObject("carottes", 50, 50, "left")
+    
+    dragAndDropObject("carottes", 50, 50, "right")
 
     # Fermer le frigo
     pushTheAction("croix", 50, 50)
@@ -390,11 +414,11 @@ def metal() :
 
     go_to_etabli_metal()
 
-    place_metal()
+    # place_metal()
 
     go_to_etabli_metal2()
 
-    place_metal()
+    # place_metal()
 
 
 def graines() :
@@ -408,11 +432,34 @@ def graines() :
 
 
 def create_equipment() :
-    # Je dois prendre de la pierre et du bois dans le coffre
-    movement(313, 690, 0.25)
+
+    # Voir dans les coffres si pas des outils
+    movement(225, 770, 0.5)
 
     pushTheAction("main", 50, 50)
 
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
+
+    lance = dragAndDropObject("lance", 50, 50, "right")
+    hachette_full = dragAndDropObject("hachette_full", 50, 50, "right")
+    hachette = dragAndDropObject("hachette", 50, 50, "right")
+    pioche1 = dragAndDropObject("pioche", 50, 50, "right")
+    pioche2 = dragAndDropObject("pioche", 50, 50, "right")
+    pioche3 = dragAndDropObject("pioche", 50, 50, "right")
+
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+
+    # Je dois prendre de la pierre et du bois dans le coffre
+    movement(313, 690, 0.5)
+
+    pushTheAction("main", 50, 50)
+
+    dragAndDropObject("pierre", 50, 50, "right")
     dragAndDropObject("pierre", 50, 50, "right")
     dragAndDropObject("bois", 50, 50, "right")
     dragAndDropObject("bois", 50, 50, "right")
@@ -424,13 +471,19 @@ def create_equipment() :
     pushTheAction("croix", 50, 50)
 
     time.sleep(1)
-    
-    create_object("craft", "hachette", 50, 50)
-    create_object("craft", "pioche_craft", 50, 50)
-    create_object("craft", "pioche_craft", 50, 50)
-    create_object("craft", "pioche_craft", 50, 50)
+    if hachette_full == False :
+        create_object("craft", "hachette", 50, 50)
+    if hachette == False :
+        create_object("craft", "hachette", 50, 50)
+    if pioche1 == False :
+        create_object("craft", "pioche_craft", 50, 50)
+    if pioche2 == False :
+        create_object("craft", "pioche_craft", 50, 50)
+    if pioche3 == False :
+        create_object("craft", "pioche_craft", 50, 50)
 
-    create_object("craft", "lance", 50, 50)
+    if lance == False :
+        create_object("craft", "lance", 50, 50)
     
     # vider le reste des ressources dans le coffre
     pushTheAction("main", 50, 50)
@@ -449,7 +502,7 @@ def create_sac_a_dos_basique() :
     # Ouvre l'équipement
     pushTheAction("sac", 50, 50)
 
-    if test_if_find_image("sac_a_dos_basique", 700, 385, 830, 490) :
+    if not test_if_find_image("sac_a_dos_basique", 700, 385, 830, 490) :
         # Ferme l'équipement
         pushTheAction("croix", 50, 50)
         create_object("craft", "sac_a_dos_basique", 50, 50)
@@ -460,15 +513,49 @@ def create_sac_a_dos_basique() :
 
 def create_and_dress_suit() :
     print("create_and_dress_suit")
+
+    # Voir dans les coffres si pas des vetements
+    movement(218, 764, 0.3)
+    movement(336, 779, 0.5)
+
+    pushTheAction("main", 50, 50)
+
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
+
+    casquette = dragAndDropObject("casquette", 50, 50, "right")
+    chemise = dragAndDropObject("chemise", 50, 50, "right")
+    pantalon = dragAndDropObject("pantalon", 50, 50, "right")
+    chaussures = dragAndDropObject("chaussures", 50, 50, "right")
+
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+    
+    dress_suit()
+
+    movement(215, 678, 0.5)
     take_materiaux()
 
     # créer un sac a dos basique si besoin
     create_sac_a_dos_basique()
 
-    create_object("craft", "casquette", 50, 50)
-    create_object("craft", "chemise", 50, 50)
-    create_object("craft", "pantalon", 50, 50)
-    create_object("craft", "chaussures", 50, 50)
+    if not casquette :
+        create_object("craft", "casquette", 50, 50)
+    # else :
+    #     dragAndDropObject("casquette", 420, 668, 560, 770)
+    if not chemise : 
+        create_object("craft", "chemise", 50, 50)
+    # else :
+    #     dragAndDropObject("chemise", 560, 187, 799, 348)
+    if not pantalon :
+        create_object("craft", "pantalon", 50, 50)
+    # else :
+    #     dragAndDropObject("pantalon", 700, 187, 845, 348)
+    if not chaussures : 
+        create_object("craft", "chaussures", 50, 50)
 
     replace_materiaux()
 
@@ -504,7 +591,7 @@ def replace_materiaux() :
     pushTheAction("croix", 50, 50)
 
     # Aller aux ateliers de couture
-    movement(235, 635, 0.5)
+    movement(235, 635, 0.3)
     pushTheAction("main", 50, 50)
 
     dragAndDropObject("tissus", 50, 50, "left")
@@ -523,7 +610,7 @@ def take_materiaux() :
     print("take_materiaux")
     # Aller aux ateliers de couture
     time.sleep(1)
-    movement(146, 800, 1.7)
+    movement(146, 800, 1.2)
 
     time.sleep(1)
     # Aller aux coffres
@@ -537,9 +624,11 @@ def take_materiaux() :
     pushTheAction("main", 50, 50)
 
     dragAndDropObject("tissus", 50, 50, "right")
-    dragAndDropObject("tissus", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("herbes", 50, 50, "right")
-    dragAndDropObject("herbes", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
 
     # range le coffre
     pushTheAction("order_box", 50, 50)
@@ -549,20 +638,18 @@ def take_materiaux() :
 
     # Aller aux coffres pour prendre de la corde
     time.sleep(1)
-    movement(270, 800, 0.4)
+    movement(329, 786, 0.4)
 
     # ouvrir le coffre
     pushTheAction("main", 50, 50)
 
     dragAndDropObject("corde", 50, 50, "right")
-    dragAndDropObject("corde", 50, 50, "right")
+
     # range le coffre
     pushTheAction("order_box", 50, 50)
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
-
-
 
 
 def equip_yourself() :
@@ -753,8 +840,27 @@ def create_object(dossier, object, x_plus, y_plus) :
         elif object == 'chaussures' :
             pyautogui.moveTo(200, 400)
             pyautogui.doubleClick(button='left')
+        elif object == 'sac_a_dos_basique' :
+            pyautogui.moveTo(349, 420)
+            pyautogui.doubleClick(button='left')
         
+        time.sleep(1)
         pushTheAction("creer", 50, 50)
+        time.sleep(1)
+
+        # need to replace the cursor on the top if it's sac_a_dos_basique
+        if object == "sac_a_dos_basique" :
+            x, y = 364, 272
+            # Clique au plus haut sur le sac_a_dos_basique
+            pyautogui.click(x, y, button ='left') 
+
+            # Bouger vers le haut
+            pyautogui.dragRel(x, 565, duration=1, button='left')
+
+            time.sleep(2)
+
+            # clique sur la hachette
+            dragAndDropObject("hachette", 50, 50, "left")
 
         if inventory_full_after_craft("inventory_full_after_craft", 50, 50) :
             time.sleep(1)
@@ -960,6 +1066,7 @@ def farm() :
     # p2.start()
     i = 0
     j = 0 
+    back_home = False
     while True :
         print ("p1 is alive = "+ str(p1.is_alive()))
 
@@ -969,10 +1076,16 @@ def farm() :
             
 
             if need_tools("need_tools", 50, 50) == "Inventory_full" :
+                # back to home
+                back_home =  True
                 break
             if inventory_full("inventory_full", 0, 0) :
+                # back to home
+                back_home =  True
                 break
             if inventory_full("no_more_items", 0, 0) :
+                # back to home
+                back_home =  True
                 break
             if test_if_stay_same_place(550, 330, 800, 670, 1.00) :
                 movement(50, 670, 0.3)
@@ -994,6 +1107,8 @@ def farm() :
     # Je n'ai plus de nouriture je dois fuir
     run_outside_of_the_field()
     p2.terminate()
+
+    return back_home
 
 
 def farm_2() :
@@ -1058,6 +1173,7 @@ def run_outside_of_the_field() :
 
 def farm_field() :
     print ("farm_field")
+    back_home = False
     i = 1
     while stay_in_battle() :
         if i > 3 :
@@ -1079,7 +1195,9 @@ def farm_field() :
                 print(e) 
 
             time.sleep(1)
-            farm()
+            back_home = farm()
+        if back_home :
+            break
         time.sleep(10)
 
         # Pour fermer les pubs
@@ -1122,7 +1240,7 @@ def remplir_etablis() :
 
     # Prendre 2 stack de bois
     dragAndDropObject("bois", 50, 50, "right")
-    dragAndDropObject("bois", 50, 50, "right")
+    # dragAndDropObject("bois", 50, 50, "right")
 
     # Prendre 2 stack de pierre
     dragAndDropObject("pierre", 50, 50, "right")
@@ -1168,13 +1286,13 @@ def remplir_etablis() :
     pushTheAction("gear", 50, 50)
 
     # Prendre le charbon qui a été fait.
-    time.sleep(1)
-    dragAndDropObject("charbons", 50, 50, "right")
+    # time.sleep(1)
+    # dragAndDropObject("charbons", 50, 50, "right")
     
-    dragAndDropObject("charbons_sac", 50, 50, "left")
+    # dragAndDropObject("charbons_sac", 50, 50, "left")
 
-    # Mettre des nouvelles planches dans le feu
-    dragAndDropObject("planches_sac", 50, 50, "left")
+    # # Mettre des nouvelles planches dans le feu
+    # dragAndDropObject("planches_sac", 50, 50, "left")
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
@@ -1237,7 +1355,14 @@ def herbes() :
     pushTheAction("gear", 50, 50)
 
     dragAndDropObject("herbes", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("herbes", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
     dragAndDropObject("tissus", 50, 50, "right")
+    # range le coffre
+    pushTheAction("order_box", 50, 50)
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
@@ -1267,8 +1392,10 @@ def herbes() :
     time.sleep(1)
     pushTheAction("gear", 50, 50)
 
-    dragAndDropObject("tissus_epais", 50, 50, "right")
-    dragAndDropObject("tissus_sac", 50, 50, "left")
+    dragAndDropObject("tissus", 50, 50, "right")
+    dragAndDropObject("herbes_sac", 50, 50, "left")
+    # dragAndDropObject("tissus_epais", 50, 50, "right")
+    # dragAndDropObject("tissus_sac", 50, 50, "left")
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
@@ -1300,15 +1427,15 @@ def prendre_equipement_used() :
     movement(225, 770, 0.5)
     pushTheAction("main", 50, 50)
 
-    dragAndDropObject("lance", 50, 50, "right")
+    # dragAndDropObject("lance", 50, 50, "right")
 
-    dragAndDropObject("hachette", 50, 50, "right")
-    dragAndDropObject("hachette", 50, 50, "right")
-    dragAndDropObject("hachette", 50, 50, "right")
+    # dragAndDropObject("hachette", 50, 50, "right")
+    # dragAndDropObject("hachette", 50, 50, "right")
+    # dragAndDropObject("hachette", 50, 50, "right")
 
-    dragAndDropObject("pioche", 50, 50, "right")
-    dragAndDropObject("pioche", 50, 50, "right")
-    dragAndDropObject("pioche", 50, 50, "right")
+    # dragAndDropObject("pioche", 50, 50, "right")
+    # dragAndDropObject("pioche", 50, 50, "right")
+    # dragAndDropObject("pioche", 50, 50, "right")
 
     # range le coffre
     pushTheAction("order_box", 50, 50)
@@ -1974,6 +2101,7 @@ def dragAndDropObject(dossier, x_plus, y_plus, side) :
             pyautogui.doubleClick(button='left') # double clic avec le bouton gauche
             find_image = True
             break
+    return find_image
 
 def take_graines_charbons() :
     # Aller dans le coffre
@@ -2284,7 +2412,7 @@ def test_if_find_image(dossier, x1, y1, x2, y2) :
 
         # print (str(max_loc))
         # print (str(min_loc))
-        # print (str(max_val))
+        print (str(max_val))
 
         if max_val >= 0.8:
             find_image = True
