@@ -31,6 +31,7 @@ if __name__ == '__main__':
 
     for i in range(number_of_time_to_do):
         time.sleep(1)
+        procedure.hide_objectif()
         # procedure.boite_inconue()
 
         procedure.vider_sac()
@@ -161,6 +162,7 @@ if __name__ == '__main__':
     pyautogui.hotkey('command', 'tab')
     time.sleep(1)
 
+    # procedure.hide_objectif()
     
     # procedure.go_to_farm()
 
@@ -172,7 +174,7 @@ if __name__ == '__main__':
 
     # procedure.farm_and_back_to_home()
 
-    procedure.farm_field()
+    # procedure.farm_field()
 
     # procedure.create_equipment()
     # procedure.create_and_dress_suit()

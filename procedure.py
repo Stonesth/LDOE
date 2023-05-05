@@ -12,6 +12,9 @@ import datetime
 
 import multiprocessing
 
+def hide_objectif() :
+    dragAndDropObject("hide_objectif", 50, 50, "left")
+
 def remplir_eau() :
     print("Remplir les bouteilles vide et mettre les pleins dans le bar")
 
