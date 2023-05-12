@@ -12,7 +12,7 @@ import procedure as procedure
 
 
 debug = True
-number_of_time_to_do = 0
+number_of_time_to_do = 10
  
 
 if __name__ == '__main__':
@@ -72,6 +72,8 @@ if __name__ == '__main__':
         time.sleep(1)
         procedure.movement(285, 678, 0.7)
 
+        # vider ce que j'ai dans mes poches comme nouriture
+        procedure.vider_nouriture_poche()
         procedure.vider_sac()
 
         time.sleep(0)
@@ -121,13 +123,25 @@ if __name__ == '__main__':
         procedure.vider_sac()
         procedure.movement(340, 653, 0.3)
 
+        procedure.take_items_from_base_to_colony()
+        procedure.remplir_etabli_collonie()
+
+        procedure.vider_sac()
+
+        procedure.movement(339, 657, 0.3)
         # need to wait 5 mins
         # procedure.wait_until_next_action(5)
         procedure.recycle()
 
+        # Prendre les ressources qui sont dans le coffre de brol
+        procedure.take_items_to_treat()
+        procedure.movement(303, 634, 0.5)
+        procedure.deposer_vetements()
+        procedure.movement(200, 650, 0.5)
+        procedure.vider_sac()
+
         # # -- procedure.carpet()
-        procedure.movement(200, 650, 1.0)
-        procedure.movement(322, 651, 0.4)
+        procedure.movement(331, 652, 0.3)
 
         procedure.go_to_farm()
 
@@ -162,11 +176,24 @@ if __name__ == '__main__':
     pyautogui.hotkey('command', 'tab')
     time.sleep(1)
 
+
+    # procedure.search()    
+    # time.sleep(1)
+    
+    # procedure.go_to_the_coffre()
+
+    # procedure.open_coffre()
+    # procedure.go_to_the_coffre()
+
+
+
+
+
     # procedure.hide_objectif()
     
     # procedure.go_to_farm()
 
-    # # Normally Need to wait 11 minutes pour arriver
+    # Normally Need to wait 11 minutes pour arriver
     # time.sleep(2)
     # procedure.stopApplication()
     # procedure.wait_until_next_action(11)

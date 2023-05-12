@@ -12,6 +12,367 @@ import datetime
 
 import multiprocessing
 
+def deposer_vetements() :
+    print ("deposer_vetements")
+
+    # Ouvrir le coffre
+    pushTheAction("main", 50, 50)
+
+    dragAndDropObject("casquette", 50, 50, "left")
+    dragAndDropObject("chemise", 50, 50, "left")
+    dragAndDropObject("pantalon", 50, 50, "left")
+    dragAndDropObject("chaussures", 50, 50, "left")
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+    time.sleep(1)
+
+
+def take_items_to_treat() :
+    print ("take_items_to_treat")
+    # Ouvrir le coffre
+    pushTheAction("main", 50, 50)
+
+    dragAndDropObject("barre_fer", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+
+    dragAndDropObject("charbons", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("planches", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("corde", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("tissus", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("bois", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+
+
+    dragAndDropObject("casquette", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("chemise", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("pantalon", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("chaussures", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+
+
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+    time.sleep(1)
+    
+
+
+def take_items_from_base_to_colony() :
+    print("take_items_from_base_to_colony")
+
+    movement(313, 690, 0.25)
+
+    # open cabane
+    pushTheAction("main", 50, 50)
+
+    dragAndDropObject("planches", 50, 50, "right")
+    dragAndDropObject("barre_fer", 50, 50, "right")
+
+    # Ferme la cabane
+    pushTheAction("croix", 50, 50)
+    time.sleep(1)
+    
+    movement(225, 770, 0.5)
+
+    # ouvrir le coffre
+    pushTheAction("main", 50, 50)
+
+    dragAndDropObject("charbons", 50, 50, "right")
+
+    pushTheAction("croix", 50, 50)
+    time.sleep(1)
+
+
+    
+
+
+
+def remplir_etabli_collonie() :
+    print("remplir_etabli_collonie")
+    
+    time.sleep(2)
+    click_images("home_button", 1264, 231, 1330, 300)
+    time.sleep(2)
+    click_images("voyager", 810, 445, 1015, 512)
+    time.sleep(9)
+    
+    movement(220, 770, 10)
+
+    movement(200, 740, 2)
+
+    # Ouvrir le creuset
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+    
+    # Mettre les bar de Fer
+    dragAndDropObject("barre_fer", 50, 50, "left")
+    
+    # Mettre la bar de Fer
+    dragAndDropObject("charbons", 50, 50, "left")
+
+    # Prendre les billettes
+    dragAndDropObject("billette", 50, 50, "right")
+
+    # Ferme le creuset
+    pushTheAction("croix", 50, 50)
+
+    movement(354, 667, 2)
+
+    movement(336, 799, 2)
+
+    movement(230, 784, 2)
+
+    # Ouvrir la scierie
+    remplir_etabli_avec("poutres_de_pin", "planches", 50, 50)
+
+    movement(355, 659, 1.5)
+
+    movement(366, 753, 1.5)
+
+    movement(266, 767, 2)
+
+    movement(190, 711, 1.5)
+
+    # Ouvrir le stock de poutre en pein
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Déposer les poutres_de_pin
+    dragAndDropObject("poutres_de_pin", 50, 50, "left")
+    # Prendre des poutres de pin pour constuire des Cadre Léger
+    dragAndDropObject("poutres_de_pin", 50, 50, "right")
+
+    # Ferme la scierie
+    pushTheAction("croix", 50, 50)
+
+    movement(190, 711, 0.5)
+
+    # Ouvrir le stock de billette
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Déposer les poutres_de_pin
+    dragAndDropObject("billette", 50, 50, "left")
+
+    # Ferme le stock de billette
+    pushTheAction("croix", 50, 50)
+
+    movement(350, 669, 1.5)
+
+    # Ouvrir l'etagere
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Prendre des Vis
+    dragAndDropObject("vis_v2", 50, 50, "right")
+
+    # Ferme l'etagere
+    pushTheAction("croix", 50, 50)
+
+    movement(386, 644, 2.8)
+
+    # Ouvrir la table d'assemblage
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Deposer les Vis
+    dragAndDropObject("vis_v2", 50, 50, "left")
+    # Deposer les Vis
+    dragAndDropObject("poutres_de_pin", 50, 50, "left")
+    
+    # prendre les cadres léger
+    dragAndDropObject("cadre_leger", 50, 50, "right")
+
+    # Ferme la table d'assemblage
+    pushTheAction("croix", 50, 50)
+
+    movement(202, 774, 2.5)
+
+    movement(280, 629, 0.8)
+
+    # Vider les vis_v2
+    # Ouvrir l'etagere
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Deposer les Vis
+    dragAndDropObject("vis_v2", 50, 50, "left")
+    # Ferme l'etagere
+    pushTheAction("croix", 50, 50)
+    
+    movement(195, 691, 0.8)
+    # Vider les cadres léger
+    # Ouvrir l'etagere
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Deposer les Vis
+    dragAndDropObject("cadre_leger", 50, 50, "left")
+    # Ferme l'etagere
+    pushTheAction("croix", 50, 50)
+
+
+    movement(195, 691, 0.8)
+    # Vider les poutres de pin
+    # Ouvrir l'etagere
+    pushTheAction("gear", 50, 50)
+    time.sleep(1)
+
+    # Deposer les Vis
+    dragAndDropObject("poutres_de_pin", 50, 50, "left")
+    # Ferme l'etagere
+    pushTheAction("croix", 50, 50)
+
+    time.sleep(2)
+    click_images("home_button", 1264, 231, 1330, 300)
+    time.sleep(2)
+    click_images("voyager", 810, 445, 1015, 512)
+    time.sleep(9)
+    
+
+def open_coffre():
+    print("open_coffre")
+
+    
+    # Ouvre le bar
+    pushTheAction("main", 50, 50)
+
+    time.sleep(6)
+
+
+
+
+def go_to_the_coffre() :
+    print("go_to_the_coffre")
+
+    print (where_is_the_item("coffre", 1115, 25, 1325, 245))
+
+    x, y = where_is_the_item("coffre", 1115, 25, 1325, 245)
+    print("x = " + str(x) + ", y = " + str(y))
+
+    x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
+    print("x1 = " + str(x1) + ", y1 = " + str(y1))
+
+    x0 = abs(x - x1)
+    y0 = abs(y - y1)
+    
+    if x0 > y0 :
+        sum = x0
+    else :
+        sum = y0
+
+    print("sum = " + str(sum))
+    if (sum < 100) :
+        movement(x+82, y+497, 1.1)
+    elif (sum < 115) :
+        movement(x+82, y+497, 1.5)
+    else :
+        movement(x+82, y+497, 2)
+
+
+
+
+def where_is_the_item(dossier, x1, y1, x2, y2) :
+    print("where_is_the_item")
+
+    # Capture d'écran partielle
+    x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
+    screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
+    cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/screenshot.png', screenshot)
+
+    image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
+    image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
+
+    find_image = False
+    for filepath in image_paths:
+        # Lecture de l'image modèle
+    # Lecture de l'image modèle
+    # template = cv2.imread("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/template.png")
+        template = cv2.imread(filepath)
+
+        # Afficher la taille de l'image
+        print("dossier : ", dossier)
+        # print("Taille de l'image template : ", template.shape)
+        # print("Taille de l'image screenshot : ", screenshot.shape)
+
+        # Conversion en niveaux de gris
+        gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+        gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+        # Récupération des dimensions de l'image modèle
+        h, w = gray_template.shape
+
+        # Correspondance de modèle
+        result = cv2.matchTemplate(gray_screenshot, gray_template, cv2.TM_CCOEFF_NORMED)
+
+        # Récupération de la position de la correspondance maximale
+        _, _, min_loc, max_loc = cv2.minMaxLoc(result)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+
+        # print (str(max_loc))
+        # print (str(min_loc))
+        print (str(max_val))
+
+        if max_val >= 0.8:
+            return max_loc
+
+        # # Affichage de la correspondance maximale
+        # cv2.rectangle(screenshot, max_loc, (max_loc[0] + w, max_loc[1] + h), (0, 0, 255), 2)
+
+        # # Affichage de l'image résultat
+        # cv2.imshow("Result", screenshot)
+        # cv2.waitKey(0)
+
+    return find_image
+
+
+def search() :
+
+    p0 = multiprocessing.Process(target=check_radar)
+    p1 = multiprocessing.Process(target=bouger)
+    p0.start()
+    p1.start()
+   
+    p0.join()
+    p1.terminate()
+    movement(217, 659, 0.1)
+
+def bouger() :
+    while True :
+        movement(217, 659, 15)
+
+
+def check_radar() :
+    
+    while True :
+        if test_if_find_image("coffre", 1115, 25, 1325, 245) :
+            break
+    return True
+            
+    
+
+
+
+def movement_haut() :
+    movement(280, 650, 15)
+
+def movement_gauche() :
+    movement(190, 710, 15)
+
+def movement_droite() :
+    movement(370, 710, 15)
+
+def movement_bas() :
+    movement(280, 800, 15)
+
 def hide_objectif() :
     dragAndDropObject("hide_objectif", 50, 50, "left")
 
@@ -458,7 +819,7 @@ def create_equipment() :
     pushTheAction("croix", 50, 50)
 
     # Je dois prendre de la pierre et du bois dans le coffre
-    movement(313, 690, 0.5)
+    movement(313, 690, 0.7)
 
     pushTheAction("main", 50, 50)
 
@@ -764,7 +1125,7 @@ def go_to_calcaire() :
             # Je dois fermer les popups 
             pushTheAction_2("plus_tard", 50, 50)
         
-        if i > 4 : 
+        if i > 8 : 
             break
 
     # pyautogui.click(200, 200, button ='left') 
@@ -1218,6 +1579,8 @@ def farm_field() :
 def farm_and_back_to_home() :
     farm_field()
 
+    # Need to take all items left on the field
+
     back_to_home()
 
 def remplir_etablis() :
@@ -1289,13 +1652,13 @@ def remplir_etablis() :
     pushTheAction("gear", 50, 50)
 
     # Prendre le charbon qui a été fait.
-    # time.sleep(1)
-    # dragAndDropObject("charbons", 50, 50, "right")
+    time.sleep(1)
+    dragAndDropObject("charbons", 50, 50, "right")
     
-    # dragAndDropObject("charbons_sac", 50, 50, "left")
+    dragAndDropObject("charbons_sac", 50, 50, "left")
 
-    # # Mettre des nouvelles planches dans le feu
-    # dragAndDropObject("planches_sac", 50, 50, "left")
+    # Mettre des nouvelles planches dans le feu
+    dragAndDropObject("planches_sac", 50, 50, "left")
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
@@ -1491,9 +1854,6 @@ def vider_nouriture_poche() :
 
 def vider_sac() :
     # Je dois vider mon sac
-    # vider ce que j'ai dans mes poches comme nouriture
-    vider_nouriture_poche()
-
     # vider le bois les pierres dans la cabane
     movement(313, 690, 0.25)
 
@@ -2383,6 +2743,7 @@ def test_if_find_image(dossier, x1, y1, x2, y2) :
     # Capture d'écran partielle
     x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
     screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
+    cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/screenshot.png', screenshot)
 
     image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
     image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
