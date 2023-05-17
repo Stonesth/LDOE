@@ -12,6 +12,90 @@ import datetime
 
 import multiprocessing
 
+def prendre_pierre() :
+    print ("prendre_pierre")
+
+    movement(225, 770, 0.5)
+
+    time.sleep(1)
+    pushTheAction("main", 50, 50)
+
+    # Place tout les objets dans le coffre
+    dragAndDropObject("pierre", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("pierre", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("pierre", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("pierre", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+
+def prendre_blocs() :
+    print ("prendre_blocs")
+
+    movement(225, 770, 0.5)
+
+    time.sleep(1)
+    pushTheAction("main", 50, 50)
+
+    # Place tout les objets dans le coffre
+    dragAndDropObject("blocs", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("blocs", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("blocs", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("blocs", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+
+
+def detruire_pierre() :
+    print ("detruire_pierre")
+
+    # Ouvre l'équipement
+    pushTheAction("sac", 50, 50)
+
+    detruire("pierre")
+    detruire("pierre")
+    detruire("pierre")
+    detruire("pierre")
+    detruire("pierre")
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+
+def detruire_blocs() :
+    print ("detruire_blocs")
+
+    # Ouvre l'équipement
+    pushTheAction("sac", 50, 50)
+
+    detruire("blocs")
+    detruire("blocs")
+    detruire("blocs")
+    detruire("blocs")
+    detruire("blocs")
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+
+def detruire(dossier) :
+
+    dragAndDropObject(dossier, 50, 50, "left")
+    time.sleep(1)
+    pyautogui.click(button='left') # clic avec le bouton gauche
+    
+    dragAndDropObject("poubelle", 50, 50, "left")
+    time.sleep(1)
+    dragAndDropObject("supprimer", 50, 50, "right")
+
+
 def deposer_vetements() :
     print ("deposer_vetements")
 
@@ -526,6 +610,7 @@ def take_items_reorganize() :
 
     # Prendre les resources
     dragAndDropObject("herbes", 50, 50, "right")
+    dragAndDropObject("herbes", 50, 50, "right")
     # range le coffre
     pushTheAction("order_box", 50, 50)
     dragAndDropObject("tissus", 50, 50, "right")
@@ -982,7 +1067,7 @@ def take_materiaux() :
 
     # Aller aux coffres
     time.sleep(1)
-    movement(185, 743, 1.0)
+    movement(185, 743, 1.5)
 
     # ouvrir le coffre
     pushTheAction("main", 50, 50)
@@ -1670,13 +1755,13 @@ def remplir_etablis() :
     pushTheAction("gear", 50, 50)
 
     # # Prendre le charbon qui a été fait.
-    # time.sleep(1)
-    # dragAndDropObject("charbons", 50, 50, "right")
+    time.sleep(1)
+    dragAndDropObject("charbons", 50, 50, "right")
     
-    # dragAndDropObject("charbons_sac", 50, 50, "left")
+    dragAndDropObject("charbons_sac", 50, 50, "left")
 
-    # # Mettre des nouvelles planches dans le feu
-    # dragAndDropObject("planches_sac", 50, 50, "left")
+    # Mettre des nouvelles planches dans le feu
+    dragAndDropObject("planches_sac", 50, 50, "left")
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
@@ -2846,6 +2931,8 @@ def click_images(dossier, x1, y1, x2, y2) :
     # Capture d'écran partielle
     x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
     screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
+
+    cv2.imwrite("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/screenshot.png", screenshot)
 
     image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
     image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]

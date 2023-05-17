@@ -13,6 +13,7 @@ import procedure as procedure
 
 debug = True
 number_of_time_to_do = 10
+number_of_time_to_do_farm = 0
  
 
 if __name__ == '__main__':
@@ -29,12 +30,61 @@ if __name__ == '__main__':
         pyautogui.hotkey('command', 'tab')
         time.sleep(1)
 
+    for j in range(number_of_time_to_do_farm) :
+        time.sleep(1)
+        procedure.hide_objectif()
+
+        procedure.vider_sac()
+
+        procedure.prendre_pierre()
+        procedure.detruire_pierre()
+        procedure.prendre_blocs()
+        procedure.detruire_blocs()
+
+        procedure.prendre_equipement_used()
+        procedure.vider_equipement_poche()
+
+        procedure.movement(216, 688, 0.7)
+
+        procedure.recycle()
+
+        time.sleep(1)
+        procedure.movement(201, 668, 0.7)
+        time.sleep(1)
+        procedure.movement(285, 678, 0.6)
+
+
+        procedure.go_to_farm()
+
+        # Normally Need to wait 11 minutes pour arriver
+        time.sleep(2)
+        procedure.stopApplication()
+        procedure.wait_until_next_action(11)
+        procedure.startApplication()
+
+        procedure.farm_and_back_to_home()
+
+        # # Je dois attendre 11 minutes
+        procedure.stopApplication()
+        procedure.wait_until_next_action(11)
+        procedure.startApplication()
+
+        # Je dois entrer dans la ville
+        time.sleep(1)
+        procedure.pushTheAction("entrer", 50, 50)
+        time.sleep(8)
+
     for i in range(number_of_time_to_do):
         time.sleep(1)
         procedure.hide_objectif()
         # procedure.boite_inconue()
 
         procedure.vider_sac()
+
+        procedure.prendre_pierre()
+        procedure.detruire_pierre()
+        procedure.prendre_blocs()
+        procedure.detruire_blocs()
 
         procedure.prendre_equipement_used()
         procedure.vider_equipement_poche()
@@ -171,40 +221,52 @@ if __name__ == '__main__':
         pyautogui.hotkey('command', 'tab')
         time.sleep(1)
 
-    time.sleep(1)
-    pyautogui.click(800, 400, button ='left') 
-    pyautogui.hotkey('command', 'tab')
-    time.sleep(1)
+# Testing phase
+    if debug :
+        time.sleep(1)
+        pyautogui.click(800, 400, button ='left') 
+        pyautogui.hotkey('command', 'tab')
+        time.sleep(1)
+
+        # procedure.prendre_pierre()
+        # procedure.detruire_pierre()
+
+        # procedure.hide_objectif()
+
+        # procedure.vider_sac()
+
+        # procedure.prendre_equipement_used()
+        # procedure.vider_equipement_poche()
 
 
-    # procedure.search()    
-    # time.sleep(1)
-    
-    # procedure.go_to_the_coffre()
+        # procedure.carpet()
+        # procedure.go_to_farm()
 
-    # procedure.open_coffre()
-    # procedure.go_to_the_coffre()
+        # # Normally Need to wait 11 minutes pour arriver
+        # time.sleep(2)
+        # procedure.stopApplication()
+        # procedure.wait_until_next_action(11)
+        # procedure.startApplication()
+
+        # procedure.farm_and_back_to_home()
+
+
+        # procedure.search()    
+        # time.sleep(1)
+        
+        # procedure.go_to_the_coffre()
+
+        # procedure.open_coffre()
+        # procedure.go_to_the_coffre()
 
 
 
 
 
-    # procedure.hide_objectif()
-    
-    # procedure.go_to_farm()
+        # procedure.farm_field()
 
-    # Normally Need to wait 11 minutes pour arriver
-    # time.sleep(2)
-    # procedure.stopApplication()
-    # procedure.wait_until_next_action(11)
-    # procedure.startApplication()
+        # procedure.create_equipment()
+        # procedure.create_and_dress_suit()
+        # procedure.take_materiaux()
 
-    # procedure.farm_and_back_to_home()
-
-    # procedure.farm_field()
-
-    # procedure.create_equipment()
-    # procedure.create_and_dress_suit()
-    # procedure.take_materiaux()
-
-    # procedure.dress_suit()
+        # procedure.dress_suit()
