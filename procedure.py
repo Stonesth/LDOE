@@ -577,56 +577,135 @@ def check_radar() :
 
     return True
             
+def stop_moving() :
+    if (test_if_find_image("enemy", 1110, 20, 1320, 245)) :
+        movement(100, 100, 0.1)
+
+    if (test_if_find_image("animaux", 1110, 20, 1320, 245)) :
+        movement(100, 100, 0.1)
 
 def kill() :
-    p1 = multiprocessing.Process(target=live_in_the_field)
-    p1.start()
+    # p1 = multiprocessing.Process(target=live_in_the_field)
+    p2 = multiprocessing.Process(target=stop_moving)
+    # p1.start()
+    p2.start()
 
     while True :
-        kill_enemy()
+        kill_target("enemy")
+        kill_target("animaux")
 
-    
-    p1.terminate()
+        if (not test_if_find_image("enemy", 1110, 20, 1320, 245) and not test_if_find_image("animaux", 1110, 20, 1320, 245)) :
+            pushTheAction("auto", 50, 50)
+        else :
+            print ("enemy = " + str(test_if_find_image("enemy", 1110, 20, 1320, 245)))
+            print ("animaux = " + str(test_if_find_image("enemy", 1110, 20, 1320, 245)))
+            print ("")
 
+        # break the while when stay in the same place
+        if test_if_stay_same_place(80, 810, 150, 890, 1.00) :
+            pushTheAction("auto", 50, 50)
+            if test_if_stay_same_place(80, 810, 150, 890, 1.00) :
+                break
+    # return to base
+    # p1.terminate()
+    p2.terminate()
+    print("STOP")
+
+def kill_target(dossier) :
+    print("kill_enemy")
+
+    try :
+        if (test_if_find_image(dossier, 1110, 20, 1320, 245)) :
+            # s'acroupir
+            dragAndDropObject("acroupir", 50, 50, "right")
+
+            print (where_is_the_item(dossier, 1115, 25, 1325, 245))
+
+            x, y = where_is_the_item(dossier, 1115, 25, 1325, 245)
+            print("x = " + str(x) + ", y = " + str(y))
+
+            x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
+            print("x1 = " + str(x1) + ", y1 = " + str(y1))
+
+            x0 = abs(x - x1)
+            y0 = abs(y - y1)
+            
+            if x0 > y0 :
+                sum = x0
+            else :
+                sum = y0
+
+            print("sum = " + str(sum))
+            if (sum < 100) :
+                movement(x+82, y+497, 1.1)
+            elif (sum < 115) :
+                movement(x+82, y+497, 1.5)
+            else :
+                movement(x+82, y+497, 2)
+
+            # dois tuer l'ennemi
+            # Tant que on voit le nom d'un enemi 
+            while test_if_find_image("name_enemi", 570, 25, 800, 60) :
+                click_gauche(1, 1265, 710)
+
+            # ramasser ce qui est tombé
+            ramasser_items()
+    except :
+        print ("continue")
 
 
 def kill_enemy() :
     print("kill_enemy")
 
     try :
-        # s'acroupir
-        dragAndDropObject("acroupir", 50, 50, "right")
+        if (test_if_find_image("enemy", 1110, 20, 1320, 245)) :
+            # s'acroupir
+            dragAndDropObject("acroupir", 50, 50, "right")
 
-        print (where_is_the_item("enemy", 1115, 25, 1325, 245))
+            print (where_is_the_item("enemy", 1115, 25, 1325, 245))
 
-        x, y = where_is_the_item("enemy", 1115, 25, 1325, 245)
-        print("x = " + str(x) + ", y = " + str(y))
+            x, y = where_is_the_item("enemy", 1115, 25, 1325, 245)
+            print("x = " + str(x) + ", y = " + str(y))
 
-        x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
-        print("x1 = " + str(x1) + ", y1 = " + str(y1))
+            x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
+            print("x1 = " + str(x1) + ", y1 = " + str(y1))
 
-        x0 = abs(x - x1)
-        y0 = abs(y - y1)
-        
-        if x0 > y0 :
-            sum = x0
-        else :
-            sum = y0
+            x0 = abs(x - x1)
+            y0 = abs(y - y1)
+            
+            if x0 > y0 :
+                sum = x0
+            else :
+                sum = y0
 
-        print("sum = " + str(sum))
-        if (sum < 100) :
-            movement(x+82, y+497, 1.1)
-        elif (sum < 115) :
-            movement(x+82, y+497, 1.5)
-        else :
-            movement(x+82, y+497, 2)
+            print("sum = " + str(sum))
+            if (sum < 100) :
+                movement(x+82, y+497, 1.1)
+            elif (sum < 115) :
+                movement(x+82, y+497, 1.5)
+            else :
+                movement(x+82, y+497, 2)
 
-        # dois tuer l'ennemi
-        # Tant que on voit le nom d'un enemi 
-        click_gauche(10, 1265, 710)
+            # dois tuer l'ennemi
+            # Tant que on voit le nom d'un enemi 
+            while test_if_find_image("name_enemi", 570, 25, 800, 60) :
+                click_gauche(1, 1265, 710)
+
+            # ramasser ce qui est tombé
+            ramasser_items()
     except :
         print ("continue")
 
+def ramasser_items() :
+    pushTheAction("main", 50, 50)
+    time.sleep(1)
+
+    dragAndDropObject("corde", 50, 50, "right")
+    dragAndDropObject("viande", 50, 50, "right")
+    dragAndDropObject("peau", 50, 50, "right")
+
+    # Fermer l'équipement
+    pushTheAction("croix", 50, 50)
 
 def click_gauche(duree_clic, x, y) :
     # Obtenez les coordonnées de la position actuelle de la souris (optionnel)
@@ -1438,6 +1517,38 @@ def go_to_calcaire() :
             break
         else :
             print("Je ne vois pas le message, on recommence le process")
+            # Need to look if you still in the colony
+            if (test_if_find_image("acroupir", 1300, 830, 1350, 885)) :
+                print ("je suis dans la colony")
+                carpet()
+
+                # enlever la lance si j'en ai une
+                # Ouvre l'équipement
+                pushTheAction("sac", 50, 50)
+                time.sleep(1)
+
+                # vider ce que j'ai dans les poches
+                dragAndDropObject("lance", 50, 50, "right")
+                
+                # Ferme l'équipement
+                pushTheAction("croix", 50, 50)
+
+                # vider le sac 
+                vider_sac()
+
+                # vider l'équipement
+                vider_equipement_poche()
+                time.sleep(1)
+                movement(380, 715, 0.5)
+                # vider le sac 
+                vider_sac()
+                
+                time.sleep(1)
+                movement(280, 670, 0.5)
+                
+                time.sleep(1)
+                go_to_farm()
+
 
 
 def go_to_calcaire2() :
@@ -1820,57 +1931,6 @@ def take_everything() :
             # afficher l'exception, mais ne rien faire d'autre
             print(e) 
     
-def farm2() :
-    print ("Farme")
-
-    p1 = multiprocessing.Process(target=live_in_the_field)
-
-    p1.start()
-
-    back_home = False
-    while True :
-        print ("p1 is alive = "+ str(p1.is_alive()))
-        search()    
-        time.sleep(1)
-        
-        go_to_the_coffre()
-        try : 
-            if not p1.is_alive() : 
-                break
-
-            if need_tools("need_tools", 50, 50) == "Inventory_full" :
-                # back to home
-                back_home =  True
-                break
-            if inventory_full("inventory_full", 0, 0) :
-                # back to home
-                back_home =  True
-                break
-            if inventory_full("no_more_items", 0, 0) :
-                # back to home
-                back_home =  True
-                break
-            if test_if_stay_same_place(550, 330, 800, 670, 1.00) :
-                movement(50, 670, 0.3)
-                # pushTheAction("auto", 50, 50)
-            if test_if_still_places("entrer") :
-                pushTheAction_2("entrer", 50, 50)
-                time.sleep(7)
-
-        except Exception as e:
-            # afficher l'exception, mais ne rien faire d'autre
-            print(e) 
-
-    p1.terminate()
-    # p2.terminate()
-
-    p2 = multiprocessing.Process(target=stay_in_live)
-    p2.start()
-    # Je n'ai plus de nouriture je dois fuir
-    run_outside_of_the_field()
-    p2.terminate()
-
-    return back_home
 
 def farm() :
     print ("Farme the field")
@@ -1930,6 +1990,58 @@ def farm() :
 
     return back_home
 
+
+def farm2() :
+    print ("Farme")
+
+    p1 = multiprocessing.Process(target=live_in_the_field)
+
+    p1.start()
+
+    back_home = False
+    while True :
+        print ("p1 is alive = "+ str(p1.is_alive()))
+        search()    
+        time.sleep(1)
+        
+        go_to_the_coffre()
+        try : 
+            if not p1.is_alive() : 
+                break
+
+            if need_tools("need_tools", 50, 50) == "Inventory_full" :
+                # back to home
+                back_home =  True
+                break
+            if inventory_full("inventory_full", 0, 0) :
+                # back to home
+                back_home =  True
+                break
+            if inventory_full("no_more_items", 0, 0) :
+                # back to home
+                back_home =  True
+                break
+            if test_if_stay_same_place(550, 330, 800, 670, 1.00) :
+                movement(50, 670, 0.3)
+                # pushTheAction("auto", 50, 50)
+            if test_if_still_places("entrer") :
+                pushTheAction_2("entrer", 50, 50)
+                time.sleep(7)
+
+        except Exception as e:
+            # afficher l'exception, mais ne rien faire d'autre
+            print(e) 
+
+    p1.terminate()
+    # p2.terminate()
+
+    p2 = multiprocessing.Process(target=stay_in_live)
+    p2.start()
+    # Je n'ai plus de nouriture je dois fuir
+    run_outside_of_the_field()
+    p2.terminate()
+
+    return back_home
 
 def farm_2() :
     print ("Farme the field")
@@ -2289,6 +2401,7 @@ def vider_equipement_poche() :
     # Ferme l'équipement
     pushTheAction("croix", 50, 50)
 
+def after_vider_equipement_poche() : 
     # vider le reste dans le coffre recyclage
     time.sleep(1)
     movement(380, 715, 0.9)
@@ -3215,7 +3328,7 @@ def test_if_find_image(dossier, x1, y1, x2, y2) :
     # Capture d'écran partielle
     x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
     screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
-    cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/dead_or_not.png', screenshot)
+    cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/test_if_find_image.png', screenshot)
 
     image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
     image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
@@ -3250,8 +3363,9 @@ def test_if_find_image(dossier, x1, y1, x2, y2) :
         # print (str(min_loc))
         print (str(max_val))
 
-        if max_val >= 0.8:
+        if max_val >= 0.85:
             find_image = True
+            print("Correspondance with the image = " + filepath)
             break
 
         # # Affichage de la correspondance maximale

@@ -13,7 +13,7 @@ import procedure as procedure
 import multiprocessing
 
 debug = True
-number_of_time_to_do = 20
+number_of_time_to_do = 0
 number_of_time_to_do_farm = 0
 test = 0
  
@@ -48,6 +48,7 @@ def all_steps(queue, event, i) :
 
     procedure.prendre_equipement_used()
     procedure.vider_equipement_poche()
+    procedure.after_vider_equipement_poche()
 
     # -- procedure.carpet()
     time.sleep(1)
@@ -206,6 +207,7 @@ def farm_only(queue, event, j) :
 
     procedure.prendre_equipement_used()
     procedure.vider_equipement_poche()
+    procedure.after_vider_equipement_poche()
 
     procedure.carpet()
     # time.sleep(1)
@@ -341,7 +343,7 @@ if __name__ == '__main__':
         # procedure.movement(200, 800, 7)
 
         # procedure.go_to_farm()
-        # procedure.go_to_calcaire()
+        procedure.go_to_calcaire()
         # procedure.farm_and_back_to_home()
 
-        # procedure.farm_2()
+        # procedure.kill()
