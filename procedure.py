@@ -13,6 +13,18 @@ import datetime
 import multiprocessing
 import random
 
+
+import tkinter as tk
+import pync
+
+import objc
+import AppKit
+from PyObjCTools import AppHelper
+
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
 def test1(queue, event):
     while True:
         for i in range(1000):
@@ -34,23 +46,80 @@ def test2(queue, event):
             event.set()
             break
     
+def fabriquer_corde(take_the_corde) :
+
+    # Aller vers le coffre avec toutes les resources de mission
+    movement(225, 770, 0.5)
+    
+    # Ouvrir le coffre
+    pushTheAction("main", 50, 50)
+
+    dragAndDropObject("herbes", 50, 50, "right")
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+    time.sleep(1)
+
+    # Aller vers la tanerie/metier a tisser
+    movement(271, 642, 0.5)
+
+    # Ouvrir le chevalet
+    pushTheAction("gear", 50, 50)
+
+    if (take_the_corde) :
+        dragAndDropObject("corde", 50, 50, "right")
+    dragAndDropObject("herbes", 50, 50, "left")
+    
+    # Ferme le chevalet
+    pushTheAction("croix", 50, 50)
+
+    # Retourner au point de départ
+    movement(314, 750, 0.4)
+
+
+def delete_all_except_one_stack(dossier) :
+    # Ouvrir le coffre
+    pushTheAction("main", 50, 50)
+
+    while dragAndDropObject(dossier, 50, 50, "right") : 
+        # range le coffre
+        pushTheAction("order_box", 50, 50)
+        
+    dragAndDropObject(dossier, 50, 50, "left")
+
+    # Ferme le coffre
+    pushTheAction("croix", 50, 50)
+    time.sleep(1)
+
+    # Ouvre l'équipement
+    pushTheAction("sac", 50, 50)
+    time.sleep(1)
+
+    while test_if_find_image(dossier, 134, 164, 660, 705) : 
+        detruire(dossier)
+
+    # Ferme l'équipement
+    pushTheAction("croix", 50, 50)
+
 
 def dead_or_not(queue, event) :
     while True :
         if test_if_find_image("dead", 500, 275, 950, 330) :
-            time.sleep(1)
-            pushTheAction_2("ressuciter", 50, 50)
-            # Let the time to back to home
-            time.sleep(8)
-            event.set()
+            while test_if_find_image("ressuciter", 720, 590, 990, 650) : 
+                time.sleep(1)
+                pushTheAction_2("ressuciter", 50, 50)
+                # Let the time to back to home
+                time.sleep(8)
+                event.set()
             break
 
         if test_if_find_image("ressuciter", 720, 590, 990, 650) :
-            time.sleep(1)
-            pushTheAction_2("ressuciter", 50, 50)
-            # Let the time to back to home
-            time.sleep(8)
-            event.set()
+            while test_if_find_image("ressuciter", 720, 590, 990, 650) : 
+                time.sleep(1)
+                pushTheAction_2("ressuciter", 50, 50)
+                # Let the time to back to home
+                time.sleep(8)
+                event.set()
             break
         time.sleep(60)
 
@@ -217,6 +286,8 @@ def take_items_to_treat() :
     dragAndDropObject("tissus", 50, 50, "right")
     pushTheAction("order_box", 50, 50)
     dragAndDropObject("bois", 50, 50, "right")
+    pushTheAction("order_box", 50, 50)
+    dragAndDropObject("herbes", 50, 50, "right")
     pushTheAction("order_box", 50, 50)
 
     dragAndDropObject("casquette", 50, 50, "right")
@@ -470,12 +541,12 @@ def search_enemi() :
 def go_to_the_coffre() :
     print("go_to_the_coffre")
 
-    print (where_is_the_item("coffre", 1115, 25, 1325, 245))
+    print (where_is_the_item("coffre", 1110, 30, 210, 215))
 
-    x, y = where_is_the_item("coffre", 1115, 25, 1325, 245)
+    x, y = where_is_the_item("coffre", 1110, 30, 210, 215)
     print("x = " + str(x) + ", y = " + str(y))
 
-    x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
+    x1, y1 = where_is_the_item("arrow", 1110, 30, 210, 215)
     print("x1 = " + str(x1) + ", y1 = " + str(y1))
 
     x0 = abs(x - x1)
@@ -498,56 +569,61 @@ def go_to_the_coffre() :
 
 
 def where_is_the_item(dossier, x1, y1, x2, y2) :
-    print("where_is_the_item")
-
-    # Capture d'écran partielle
-    x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
-    screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
-    cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/screenshot.png', screenshot)
-
-    image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
-    image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
-
+    # popup("where_is_the_item = " + dossier)
+    
     find_image = False
-    for filepath in image_paths:
+    try :
+        # Capture d'écran partielle
+        x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
+        screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
+        cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/screenshot.png', screenshot)
+
+        image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
+        image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
+
+        for filepath in image_paths:
+            # Lecture de l'image modèle
         # Lecture de l'image modèle
-    # Lecture de l'image modèle
-    # template = cv2.imread("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/template.png")
-        template = cv2.imread(filepath)
+        # template = cv2.imread("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/template.png")
+            template = cv2.imread(filepath)
 
-        # Afficher la taille de l'image
-        print("dossier : ", dossier)
-        # print("Taille de l'image template : ", template.shape)
-        # print("Taille de l'image screenshot : ", screenshot.shape)
+            # Afficher la taille de l'image
+            print("dossier : ", dossier)
+            # print("Taille de l'image template : ", template.shape)
+            # print("Taille de l'image screenshot : ", screenshot.shape)
 
-        # Conversion en niveaux de gris
-        gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
-        gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+            # Conversion en niveaux de gris
+            gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+            gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 
-        # Récupération des dimensions de l'image modèle
-        h, w = gray_template.shape
+            # Récupération des dimensions de l'image modèle
+            h, w = gray_template.shape
 
-        # Correspondance de modèle
-        result = cv2.matchTemplate(gray_screenshot, gray_template, cv2.TM_CCOEFF_NORMED)
+            # Correspondance de modèle
+            result = cv2.matchTemplate(gray_screenshot, gray_template, cv2.TM_CCOEFF_NORMED)
 
-        # Récupération de la position de la correspondance maximale
-        _, _, min_loc, max_loc = cv2.minMaxLoc(result)
-        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            # Récupération de la position de la correspondance maximale
+            _, _, min_loc, max_loc = cv2.minMaxLoc(result)
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
 
-        # print (str(max_loc))
-        # print (str(min_loc))
-        print (str(max_val))
+            # print (str(max_loc))
+            # print (str(min_loc))
+            print (str(max_val))
 
-        if max_val >= 0.8:
-            return max_loc
+            if max_val >= 0.8:
+                return max_loc
 
-        # # Affichage de la correspondance maximale
-        # cv2.rectangle(screenshot, max_loc, (max_loc[0] + w, max_loc[1] + h), (0, 0, 255), 2)
+            # # Affichage de la correspondance maximale
+            # cv2.rectangle(screenshot, max_loc, (max_loc[0] + w, max_loc[1] + h), (0, 0, 255), 2)
 
-        # # Affichage de l'image résultat
-        # cv2.imshow("Result", screenshot)
-        # cv2.waitKey(0)
+            # # Affichage de l'image résultat
+            # cv2.imshow("Result", screenshot)
+            # cv2.waitKey(0)
+    except :
+        popup("There is a problem in where_is_the_item = " + dossier)
+        find_image = False
 
+    popup("where_is_the_item = " + dossier + " return find_image = " + str(find_image))
     return find_image
 
 
@@ -569,62 +645,296 @@ def bouger() :
 def check_radar() :
     
     while True :
-        if test_if_find_image("coffre", 1115, 25, 1325, 245) :
+        if test_if_find_image("coffre", 1110, 30, 210, 215) :
             break
 
-        if test_if_find_image("enemy", 1115, 25, 1325, 245) :
+        if test_if_find_image("enemy", 1110, 30, 210, 215) :
             break
 
     return True
             
+
+def popup_X() :
+
+    # Créer la fenêtre principale
+    root = tk.Tk()
+
+    # Créer une fonction pour fermer la fenêtre après 5 secondes
+    def close_window():
+        root.after(5000, root.destroy)
+
+    # Créer une étiquette avec le texte que vous souhaitez afficher
+    label = tk.Label(root, text="Votre message ici!")
+
+    # Ajouter l'étiquette à la fenêtre
+    label.pack()
+
+    # planifier la fermeture de la fenêtre après 5 secondes
+    root.after(5000, root.destroy)
+
+    # Démarrer la boucle principale
+    root.mainloop()
+
+def popup(message) :
+    # Afficher la notification push
+    pync.notify(message, title='LDOE')
+
+def popup_2(message) :
+    window = NotificationWindow(message, 100, 100)
+    window.run()
+
+
+def stop_moving_2 (queue, event) :
+    # popup("stop_moving_2")
+    
+    while True : 
+        try :
+            if (test_if_find_image("enemy_2", 1110, 30, 210, 215)) :
+                popup("stop_moving = je vois un enemy")
+                dragAndDropObject("acroupir", 50, 50, "right")
+                movement(282, 637, 0.3)
+
+
+                event3 = multiprocessing.Event()
+                p3 = multiprocessing.Process(target=kill_target_2, args=(None, event3, "enemy_2"))
+                p3.start()
+
+                event.set()
+                break
+
+            if (test_if_find_image("animaux_2", 1110, 30, 210, 215)) :
+                # popup("stop_moving = je vois un animal")
+                dragAndDropObject("acroupir", 50, 50, "right")
+                movement(282, 637, 0.3)
+                event.set()
+                break
+
+            if (test_if_find_image("cross", 1110, 30, 210, 215)) :
+                # popup("stop_moving = je vois une croix")
+                dragAndDropObject("acroupir", 50, 50, "right")
+                movement(282, 637, 0.3)
+                event.set()
+                break
+        except :
+            print ("continue")
+            dragAndDropObject("acroupir", 50, 50, "right")
+            movement(282, 637, 0.3)
+        break
+
+
 def stop_moving() :
-    if (test_if_find_image("enemy", 1110, 20, 1320, 245)) :
-        movement(100, 100, 0.1)
+    popup("je suis vigilant")
+    if (test_if_find_image("enemy", 1110, 30, 210, 215)) :
+        time.sleep(1)
+        movement(282, 637, 0.5)
+        popup("stop_moving = je vois un enemy")
 
-    if (test_if_find_image("animaux", 1110, 20, 1320, 245)) :
-        movement(100, 100, 0.1)
+    if (test_if_find_image("animaux", 1110, 30, 210, 215)) :
+        time.sleep(1)
+        movement(282, 637, 0.5)
+        popup("stop_moving = je vois un animal")
 
-def kill() :
-    # p1 = multiprocessing.Process(target=live_in_the_field)
+    if (test_if_find_image("cross", 1110, 30, 210, 215)) :
+        time.sleep(1)
+        movement(282, 637, 0.5)
+        popup("stop_moving = je vois une croix")
+
+
+def kill(onlyBaies) :
+    while True :
+        event1 = multiprocessing.Event()
+        event2 = multiprocessing.Event()
+        # event4 = multiprocessing.Event()
+
+        p1 = multiprocessing.Process(target=live_in_the_field_2, args=(None, event1, onlyBaies))
+        p2 = multiprocessing.Process(target=stop_moving_2, args=(None, event2))
+        # p4 = multiprocessing.Process(target=take_the_cross_2, args=(None, event4, "cross"))
+
+        live = extract_live()
+        j = 1
+        while live <= 115 : 
+            print("On attend avant de continuer")
+            popup("Live = " + str(live))
+            if not test_if_still_food("foods") :
+                take_food_from_sac()
+                j = j + 1
+                if j > 5 : 
+                    break
+            take_food(live)
+            live = extract_live()
+        take_food_from_sac()
+
+        p1.start()
+        p2.start()
+
+        while True:
+            if event1.is_set() :
+                
+                if live <= 60 :
+                    p2.terminate()  # Arrêter le processus p2 si le processus p1 s'est terminé
+                    
+                    run_outside_of_the_field()
+                # p4.terminate()  # Arrêter le processus p4 si le processus p1 s'est terminé
+                break
+
+            if event2.is_set() :
+                p1.terminate()
+
+                # ramasser ce qui est tombé
+                time.sleep(1)
+                ramasser_items()
+
+                break
+            if not p2.is_alive :
+                break
+            # if event3.is_set():
+            #     # p1.terminate()  # Arrêter le processus p2 si le processus p2 s'est terminé
+            #     p2.terminate()  # Arrêter le processus p2 si le processus p2 s'est terminé
+            #     p4.terminate()  # Arrêter le processus p4 si le processus p1 s'est terminé
+            #     break
+            
+            # if event4.is_set():
+            #     # p1.terminate()  # Arrêter le processus p2 si le processus p2 s'est terminé
+            #     p2.terminate()  # Arrêter le processus p2 si le processus p2 s'est terminé
+            #     p3.terminate()  # Arrêter le processus p4 si le processus p1 s'est terminé
+            #     break
+
+        # popup("laisser p4 se terminer")
+        # p4.join()
+        # popup("laisser p2 se terminer")
+        p2.join()
+        # popup("laisser p1 se terminer")
+        p1.terminate()
+        p1.join()
+
+        event1.clear()
+        event2.clear()
+        # event4.clear()
+
+        # popup("End of the first while")
+
+
+def kill_2(onlyBaies) :
+    p1 = multiprocessing.Process(target=live_in_the_field, args=(onlyBaies, ))
     p2 = multiprocessing.Process(target=stop_moving)
-    # p1.start()
+    p1.start()
     p2.start()
 
     while True :
-        kill_target("enemy")
-        kill_target("animaux")
-
-        if (not test_if_find_image("enemy", 1110, 20, 1320, 245) and not test_if_find_image("animaux", 1110, 20, 1320, 245)) :
-            pushTheAction("auto", 50, 50)
+        if (not p1.is_alive()) :
+            p1 = multiprocessing.Process(target=live_in_the_field, args=(onlyBaies, ))
+            p1.start()
         else :
+            popup("p1 is alive = "+ str(p1.is_alive()))
+        time.sleep(2)
+
+        if (not p2.is_alive()) :
+            p2 = multiprocessing.Process(target=stop_moving)
+            p2.start()
+        else :
+            popup("p2 is alive = "+ str(p2.is_alive()))
+        time.sleep(2)
+
+        popup("Je regarde si il y des énemis")
+        kill_target("enemy")
+        time.sleep(1)
+        popup("Je regarde si il y des animaux")
+        kill_target("animaux")
+        time.sleep(1)
+        popup("Je regarde si il y des croix")
+        take_the_cross("cross")
+        time.sleep(1)
+
+        if (not test_if_find_image("enemy", 1110, 20, 1320, 245) and not test_if_find_image("animaux", 1110, 30, 210, 215)) :
+            popup("Comme il y a rien, je passe en auto")
+            auto()
+        else :
+            popup("J'ai vu quelque chose")
             print ("enemy = " + str(test_if_find_image("enemy", 1110, 20, 1320, 245)))
             print ("animaux = " + str(test_if_find_image("enemy", 1110, 20, 1320, 245)))
             print ("")
 
         # break the while when stay in the same place
         if test_if_stay_same_place(80, 810, 150, 890, 1.00) :
-            pushTheAction("auto", 50, 50)
+            popup("Cela fait longtemps que je reste a la même place")
+            auto()
             if test_if_stay_same_place(80, 810, 150, 890, 1.00) :
+                popup("C'est terminer")
                 break
+        popup("Fin du while")
+
     # return to base
-    # p1.terminate()
+    p1.terminate()
     p2.terminate()
     print("STOP")
+
+
+def kill_target_2(queue, event, dossier) :
+    print("kill_target_2")
+    # popup("try to kill = " + dossier)
+
+    try :
+        if (test_if_find_image(dossier, 1110, 30, 210, 215)) :
+            # popup("J'ai vu un " + dossier)
+            print("test_if_find_image")
+            # print (where_is_the_item(dossier, 1110, 30, 210, 215))
+
+            x, y = where_is_the_item(dossier, 1110, 30, 210, 215)
+            print("x = " + str(x) + ", y = " + str(y))
+            pyautogui.moveTo(x, y)
+
+            x1, y1 = where_is_the_item("arrow", 1110, 30, 210, 215)
+            print("x1 = " + str(x1) + ", y1 = " + str(y1))
+
+            x0 = abs(x - x1)
+            y0 = abs(y - y1)
+            
+            if x0 > y0 :
+                sum = x0
+            else :
+                sum = y0
+
+            print("sum = " + str(sum))
+            if (sum < 100) :
+                movement(x+82, y+497, 1.1)
+            elif (sum < 115) :
+                movement(x+82, y+497, 1.5)
+            else :
+                movement(x+82, y+497, 2)
+
+            # dois tuer l'ennemi
+            # Tant que on voit le nom d'un enemi 
+            click_gauche(1, 1265, 710)
+            time.sleep(1)
+            pushTheAction("auto", 50, 50)
+            while test_if_find_image("name_enemi", 570, 25, 800, 60) :
+                print ("je continue de frapper")
+
+            # J'enlève le mode automatique
+            pushTheAction("auto", 50, 50)
+    except Exception as e:
+        print ("continue")
+        print ("Exception = " + str(e))
+    event.set()
 
 def kill_target(dossier) :
     print("kill_enemy")
 
     try :
-        if (test_if_find_image(dossier, 1110, 20, 1320, 245)) :
+        if (test_if_find_image(dossier, 1110, 30, 210, 215)) :
+            popup("J'ai vu un " + dossier)
+            movement(100, 100, 0.3)
             # s'acroupir
             dragAndDropObject("acroupir", 50, 50, "right")
 
-            print (where_is_the_item(dossier, 1115, 25, 1325, 245))
+            print (where_is_the_item(dossier, 1110, 30, 210, 215))
 
-            x, y = where_is_the_item(dossier, 1115, 25, 1325, 245)
+            x, y = where_is_the_item(dossier, 1110, 30, 210, 215)
             print("x = " + str(x) + ", y = " + str(y))
+            pyautogui.moveTo(x, y)
+            time.sleep(1)
 
-            x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
+            x1, y1 = where_is_the_item("arrow", 1110, 30, 210, 215)
             print("x1 = " + str(x1) + ", y1 = " + str(y1))
 
             x0 = abs(x - x1)
@@ -653,21 +963,25 @@ def kill_target(dossier) :
     except :
         print ("continue")
 
-
-def kill_enemy() :
-    print("kill_enemy")
+def take_the_cross_2(queue, event, dossier) :
 
     try :
-        if (test_if_find_image("enemy", 1110, 20, 1320, 245)) :
+        if (test_if_find_image(dossier, 1110, 30, 210, 215)) :
+            time.sleep(1)
+            # popup("test_if_find_image = " + dossier)
             # s'acroupir
             dragAndDropObject("acroupir", 50, 50, "right")
 
-            print (where_is_the_item("enemy", 1115, 25, 1325, 245))
+            time.sleep(1)
+            print (where_is_the_item(dossier, 1110, 30, 210, 215))
 
-            x, y = where_is_the_item("enemy", 1115, 25, 1325, 245)
+            time.sleep(1)
+            x, y = where_is_the_item(dossier, 1110, 30, 210, 215)
             print("x = " + str(x) + ", y = " + str(y))
+            
+            time.sleep(1)
 
-            x1, y1 = where_is_the_item("arrow", 1115, 25, 1325, 245)
+            x1, y1 = where_is_the_item("arrow", 1110, 30, 210, 215)
             print("x1 = " + str(x1) + ", y1 = " + str(y1))
 
             x0 = abs(x - x1)
@@ -686,15 +1000,57 @@ def kill_enemy() :
             else :
                 movement(x+82, y+497, 2)
 
-            # dois tuer l'ennemi
-            # Tant que on voit le nom d'un enemi 
-            while test_if_find_image("name_enemi", 570, 25, 800, 60) :
-                click_gauche(1, 1265, 710)
+            # ramasser ce qui est tombé
+            ramasser_items()
+    except :
+        print ("continue")
+    event.set()
+    
+
+
+def take_the_cross(dossier):
+    
+    try :
+        if (test_if_find_image(dossier, 1110, 30, 210, 215)) :
+            movement(282, 637, 0.5)
+            time.sleep(1)
+            popup("test_if_find_image = " + dossier)
+            # s'acroupir
+            dragAndDropObject("acroupir", 50, 50, "right")
+
+            time.sleep(1)
+            print (where_is_the_item(dossier, 1110, 30, 210, 215))
+
+            time.sleep(1)
+            x, y = where_is_the_item(dossier, 1110, 30, 210, 215)
+            print("x = " + str(x) + ", y = " + str(y))
+            
+            time.sleep(1)
+
+            x1, y1 = where_is_the_item("arrow", 1110, 30, 210, 215)
+            print("x1 = " + str(x1) + ", y1 = " + str(y1))
+
+            x0 = abs(x - x1)
+            y0 = abs(y - y1)
+            
+            if x0 > y0 :
+                sum = x0
+            else :
+                sum = y0
+
+            print("sum = " + str(sum))
+            if (sum < 100) :
+                movement(x+82, y+497, 1.1)
+            elif (sum < 115) :
+                movement(x+82, y+497, 1.5)
+            else :
+                movement(x+82, y+497, 2)
 
             # ramasser ce qui est tombé
             ramasser_items()
     except :
         print ("continue")
+
 
 def ramasser_items() :
     pushTheAction("main", 50, 50)
@@ -1064,8 +1420,6 @@ def go_to_coffre_items() :
 def reorganize_items_items() :
     take_items_reorganize()
     
-    
-
     go_to_coffre_tissu_corde()
 
     go_to_coffre_items()
@@ -1086,6 +1440,9 @@ def reorganize_items_food() :
 
     dragAndDropObject("carottes", 50, 50, "right")
     dragAndDropObject("carottes", 50, 50, "right")
+    
+    dragAndDropObject("viande", 50, 50, "right")
+    dragAndDropObject("viande", 50, 50, "right")
 
     # Ferme l'équipement
     pushTheAction("croix", 50, 50)
@@ -1103,6 +1460,8 @@ def reorganize_items_food() :
     dragAndDropObject("baies", 50, 50, "left")
     dragAndDropObject("carottes", 50, 50, "left")
     dragAndDropObject("carottes", 50, 50, "left")
+    dragAndDropObject("viande", 50, 50, "left")
+    dragAndDropObject("viande", 50, 50, "left")
     
     dragAndDropObject("carottes", 50, 50, "right")
 
@@ -1135,26 +1494,27 @@ def go_to_etabli_metal2() :
     movement(321, 777, 0.5)
 
 
-def place_metal() :
+def place_metal(take_plaque_fer) :
     # Ouvrir l'etabli'
     pushTheAction("gear", 50, 50)
 
     dragAndDropObject("barre_fer", 50, 50, "left")
-    dragAndDropObject("plaque_fer", 50, 50, "right")
+    if (take_plaque_fer) :
+        dragAndDropObject("plaque_fer", 50, 50, "right")
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
 
-def metal() :
+def metal(take_plaque_fer) :
     take_metal()
 
     go_to_etabli_metal()
 
-    # place_metal()
+    place_metal(take_plaque_fer)
 
     go_to_etabli_metal2()
 
-    # place_metal()
+    place_metal(take_plaque_fer)
 
 
 def graines() :
@@ -1167,7 +1527,7 @@ def graines() :
     cuisiner_carottes()
 
 
-def create_equipment() :
+def create_equipment(search_resources) :
 
     # Voir dans les coffres si pas des outils
     time.sleep(1)
@@ -1192,23 +1552,38 @@ def create_equipment() :
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
 
-    # Je dois prendre de la pierre et du bois dans le coffre
-    movement(313, 690, 0.7)
+    if (search_resources) :
+        # Je dois prendre de la pierre et du bois dans le coffre
+        movement(313, 690, 0.7)
 
-    pushTheAction("main", 50, 50)
+        pushTheAction("main", 50, 50)
 
-    dragAndDropObject("pierre", 50, 50, "right")
-    dragAndDropObject("pierre", 50, 50, "right")
-    dragAndDropObject("bois", 50, 50, "right")
-    dragAndDropObject("bois", 50, 50, "right")
+        dragAndDropObject("pierre", 50, 50, "right")
+        dragAndDropObject("pierre", 50, 50, "right")
+        dragAndDropObject("bois", 50, 50, "right")
+        dragAndDropObject("bois", 50, 50, "right")
 
-    # range le coffre
-    pushTheAction("order_box", 50, 50)
+        # range le coffre
+        pushTheAction("order_box", 50, 50)
 
-    # Ferme le coffre
-    pushTheAction("croix", 50, 50)
+        # Ferme le coffre
+        pushTheAction("croix", 50, 50)
+    
 
     time.sleep(1)
+    if lance == False :
+        create_object("craft", "lance", 50, 50)
+    
+    # Equiper la lance
+    # Ouvre l'équipement
+    pushTheAction("sac", 50, 50)
+    time.sleep(1)
+    # Placer l'équipement
+    dragAndDropObject("lance", 50, 50, "left")
+
+    # Ferme l'équipement
+    pushTheAction("croix", 50, 50)
+
     if hachette_full == False :
         create_object("craft", "hachette", 50, 50)
     if hachette == False :
@@ -1222,32 +1597,25 @@ def create_equipment() :
     if pioche4 == False :
         create_object("craft", "pioche_craft", 50, 50)
 
-    if lance == False :
-        create_object("craft", "lance", 50, 50)
-    
-    # Equiper la lance
-    # Ouvre l'équipement
-    pushTheAction("sac", 50, 50)
     time.sleep(1)
 
-    # Placer l'équipement
-    dragAndDropObject("lance", 50, 50, "left")
+    if (search_resources) :
+        # vider le reste des ressources dans le coffre
+        pushTheAction("main", 50, 50)
+        
+        # Place tout les objets dans le coffre
+        pyautogui.moveTo(1110, 770) 
+        pyautogui.click(button='left') # clic avec le bouton gauche
 
-    # Ferme l'équipement
-    pushTheAction("croix", 50, 50)
+        # range le coffre
+        pushTheAction("order_box", 50, 50)
 
-    # vider le reste des ressources dans le coffre
-    pushTheAction("main", 50, 50)
-    
-    # Place tout les objets dans le coffre
-    pyautogui.moveTo(1110, 770) 
-    pyautogui.click(button='left') # clic avec le bouton gauche
+        # Ferme le coffre
+        pushTheAction("croix", 50, 50)
+    else : 
+        # replace le personnage sur la carpet
+        movement(319, 676, 0.5)
 
-    # range le coffre
-    pushTheAction("order_box", 50, 50)
-
-    # Ferme le coffre
-    pushTheAction("croix", 50, 50)
 
 def create_sac_a_dos_basique() :
     # Ouvre l'équipement
@@ -1263,7 +1631,7 @@ def create_sac_a_dos_basique() :
         pushTheAction("croix", 50, 50)
 
 
-def create_and_dress_suit() :
+def create_and_dress_suit(search_resources) :
     print("create_and_dress_suit")
 
     # Voir dans les coffres si pas des vetements
@@ -1288,11 +1656,13 @@ def create_and_dress_suit() :
     
     dress_suit()
 
-    movement(215, 678, 0.5)
-    take_materiaux()
+    if (search_resources) :
+        movement(215, 678, 0.5)
+        take_materiaux()
 
     # créer un sac a dos basique si besoin
     create_sac_a_dos_basique()
+    dress_suit_specific("sac_a_dos_basique")
 
     if not casquette :
         create_object("craft", "casquette", 50, 50)
@@ -1307,7 +1677,8 @@ def create_and_dress_suit() :
         create_object("craft", "chaussures", 50, 50)
         dress_suit_specific("chaussures")
 
-    replace_materiaux()
+    if (search_resources) :
+        replace_materiaux()
 
 def dress_suit_specific(dossier) :
     # Ouvre l'équipement
@@ -1370,7 +1741,7 @@ def take_materiaux() :
     print("take_materiaux")
     # Aller aux ateliers de couture
     time.sleep(1)
-    movement(146, 800, 1.2)
+    movement(146, 800, 1.3)
 
     time.sleep(1)
     # Aller aux coffres
@@ -1412,24 +1783,27 @@ def take_materiaux() :
     pushTheAction("croix", 50, 50)
 
 
-def equip_yourself() :
+def equip_yourself(onlyBaies, search_resources) :
     print("equip_yourself")
 
-    create_equipment()
-    create_and_dress_suit()
+    create_equipment(search_resources)
+    create_and_dress_suit(search_resources)
 
-    time.sleep(1)
-    movement(352, 657, 0.7)
-    time.sleep(1)
-    movement(340, 760, 2.5)
-    time.sleep(1)
-    movement(337, 668, 1.0)
-    time.sleep(1)
-    movement(370, 700, 0.65)
+    if (search_resources) :
+        time.sleep(1)
+        movement(352, 657, 0.7)
+        time.sleep(1)
+        movement(340, 760, 2.6)
+        time.sleep(1)
+        movement(337, 668, 1.0)
+        time.sleep(1)
+        movement(370, 700, 0.65)
 
-    # Déplacer le personnage a la position ou ce trouve le coffre ou tout les objets pour s'équiper sont
-    time.sleep(1)
-    movement(225, 770, 0.5)
+        # Déplacer le personnage a la position ou ce trouve le coffre ou tout les objets pour s'équiper sont
+        time.sleep(1)
+        movement(225, 770, 0.5)
+    else :
+        movement(205, 714, 0.5)
 
     # Doit aller au frigo
     time.sleep(1)
@@ -1439,7 +1813,10 @@ def equip_yourself() :
     pushTheAction("main", 50, 50)
 
     # Trouver les baies
-    dragAndDropObject("carottes_cuisinee", 50, 50, "right")
+    if (onlyBaies) :
+        dragAndDropObject("baies", 50, 50, "right")
+    else :
+        dragAndDropObject("carottes_cuisinee", 50, 50, "right")
     dragAndDropObject("baies", 50, 50, "right")
 
     # Fermer le frigo
@@ -1478,7 +1855,10 @@ def equip_yourself() :
 
     # mettre de l'équipement
     dragAndDropObject("baies", 50, 50, "left")
-    dragAndDropObject("carottes_cuisinee", 50, 50, "left")
+    if (onlyBaies) : 
+        dragAndDropObject("baies", 50, 50, "left")
+    else :
+        dragAndDropObject("carottes_cuisinee", 50, 50, "left")
 
     # Ferme l'équipement
     pushTheAction("croix", 50, 50)
@@ -1590,10 +1970,10 @@ def go_to_calcaire2() :
             # afficher l'exception, mais ne rien faire d'autre
             print(e) 
 
-def go_to_farm() :
+def go_to_farm(onlyBaies, search_resources) :
     print("go_to_farm")
     # je dois équipper mon personnage
-    equip_yourself()
+    equip_yourself(onlyBaies, search_resources)
 
     # Quitter la zone pour aller farmer, après avoir mis dans le recycleur
     # Déplacer le personnage vers la position pour partir
@@ -1694,19 +2074,19 @@ def create_object(dossier, object, x_plus, y_plus) :
         pyautogui.moveTo(190, 745)
         pyautogui.click(button='left')
 
-        # need to replace the cursor on the top if it's sac_a_dos_basique
-        if object == "sac_a_dos_basique" :
-            x, y = 364, 272
-            # Clique au plus haut sur le sac_a_dos_basique
-            pyautogui.click(x, y, button ='left') 
+        # # need to replace the cursor on the top if it's sac_a_dos_basique
+        # if object == "sac_a_dos_basique" :
+        #     x, y = 364, 272
+        #     # Clique au plus haut sur le sac_a_dos_basique
+        #     pyautogui.click(x, y, button ='left') 
 
-            # Bouger vers le haut
-            pyautogui.dragRel(x, 565, duration=1, button='left')
+        #     # Bouger vers le haut
+        #     pyautogui.dragRel(x, 565, duration=1, button='left')
 
-            time.sleep(2)
+        #     time.sleep(2)
 
-            # clique sur la hachette
-            dragAndDropObject("hachette", 50, 50, "left")
+        #     # clique sur la hachette
+        #     dragAndDropObject("hachette", 50, 50, "left")
 
         if inventory_full_after_craft("inventory_full_after_craft", 50, 50) :
             time.sleep(1)
@@ -1816,6 +2196,13 @@ def back_to_home() :
             break
         else :
             print("Je ne vois pas le message, on recommence le process")
+            if test_if_find_image("ressuciter", 720, 590, 990, 650) :
+                while test_if_find_image("ressuciter", 720, 590, 990, 650) : 
+                    time.sleep(1)
+                    pushTheAction_2("ressuciter", 50, 50)
+                    # Let the time to back to home
+                    time.sleep(8)
+                break
 
 
 def back_to_home2() :
@@ -1892,10 +2279,12 @@ def auto() :
         try : 
             if test_if_stay_same_place(80, 810, 150, 890, 1.00) :
                 pushTheAction("auto", 50, 50)
+            break    
         except Exception as e:
             # afficher l'exception, mais ne rien faire d'autre
             print(e) 
-
+            
+    popup("Fin du process auto()")
 
 def take_everything() :
     while True :
@@ -1932,10 +2321,10 @@ def take_everything() :
             print(e) 
     
 
-def farm() :
+def farm(onlyBaies) :
     print ("Farme the field")
     p0 = multiprocessing.Process(target=auto)
-    p1 = multiprocessing.Process(target=live_in_the_field)
+    p1 = multiprocessing.Process(target=live_in_the_field, args=(onlyBaies, ))
     p2 = multiprocessing.Process(target=take_everything)
     p3 = multiprocessing.Process(target=faire_pipi)
     
@@ -1991,10 +2380,10 @@ def farm() :
     return back_home
 
 
-def farm2() :
+def farm2(onlyBaies) :
     print ("Farme")
 
-    p1 = multiprocessing.Process(target=live_in_the_field)
+    p1 = multiprocessing.Process(target=live_in_the_field, args=(onlyBaies, ))
 
     p1.start()
 
@@ -2043,9 +2432,9 @@ def farm2() :
 
     return back_home
 
-def farm_2() :
+def farm_2(onlyBaies) :
     print ("Farme the field")
-    p1 = multiprocessing.Process(target=live_in_the_field)
+    p1 = multiprocessing.Process(target=live_in_the_field, args=(onlyBaies, ))
     p2 = multiprocessing.Process(target=stay_in_live)
     p1.start()
     time.sleep(1)
@@ -2097,13 +2486,14 @@ def farm_2() :
         p2.terminate()
 
 def run_outside_of_the_field() :
+    popup("run_outside_of_the_field")
     try : 
         movement(50, 670, 20)   
     except Exception as e:
         # afficher l'exception, mais ne rien faire d'autre
         print(e) 
 
-def farm_field() :
+def farm_field(onlyBaies) :
     print ("farm_field")
     back_home = False
     i = 1
@@ -2130,7 +2520,7 @@ def farm_field() :
                 print(e) 
 
             time.sleep(1)
-            back_home = farm()
+            back_home = farm(onlyBaies)
         if back_home :
             break
         time.sleep(10)
@@ -2147,14 +2537,14 @@ def farm_field() :
 
         i = i + 1
 
-def farm_and_back_to_home() :
-    farm_field()
+def farm_and_back_to_home(onlyBaies) :
+    farm_field(onlyBaies)
 
     # Need to take all items left on the field
 
     back_to_home()
 
-def remplir_etablis() :
+def remplir_etablis(charbons) :
 
     print("Remplir les établis de bois et de pierre")
 
@@ -2227,9 +2617,9 @@ def remplir_etablis() :
 
     # Prendre le charbon qui a été fait.
     time.sleep(1)
-    dragAndDropObject("charbons", 50, 50, "right")
-    
-    dragAndDropObject("charbons_sac", 50, 50, "left")
+    if (charbons) :
+        dragAndDropObject("charbons", 50, 50, "right")
+        dragAndDropObject("charbons_sac", 50, 50, "left")
 
     # Mettre des nouvelles planches dans le feu
     dragAndDropObject("planches_sac", 50, 50, "left")
@@ -2243,14 +2633,13 @@ def remplir_etablis() :
     # Ouvrir
     pushTheAction("gear", 50, 50)
 
-    # # # Prendre le charbon qui a été fait.
-    # time.sleep(1)
-    # dragAndDropObject("charbons", 50, 50, "right")
-    
-    # dragAndDropObject("charbons_sac", 50, 50, "left")
-
-    # # Mettre des nouvelles planches dans le feu
-    # dragAndDropObject("planches_sac", 50, 50, "left")
+    # Prendre le charbon qui a été fait.
+    time.sleep(1)
+    if (charbons) :
+        dragAndDropObject("charbons", 50, 50, "right")
+        dragAndDropObject("charbons_sac", 50, 50, "left")
+    # Mettre des nouvelles planches dans le feu
+    dragAndDropObject("planches_sac", 50, 50, "left")
 
     # Ferme le coffre
     pushTheAction("croix", 50, 50)
@@ -2470,6 +2859,7 @@ def extract_live() :
     # print("La date et l'heure actuelles sont :", now)
     # Sauvegarde la capture d'écran avant le raise de l'erreur
     screenshot = pyautogui.screenshot()
+    screenshot.save('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/screenshot.png')
     screenshot = np.array(screenshot)
     x1, y1, x2, y2 = 680, 60, 760, 110
     cropped_screenshot = screenshot[y1:y2, x1:x2, :]
@@ -2485,15 +2875,14 @@ def extract_live() :
     # Convertir le texte en nombre
     try :
         nombre = int(text)
-        print('Le nombre est :', nombre)
     except Exception as e:
         # afficher l'exception, mais ne rien faire d'autre
-        print(e)
+        print("exception " + str(e))
         nombre = "59"
 
     now = datetime.datetime.now()
     # print("La date et l'heure actuelles sont :", now)
-    print (str(nombre))
+    print('Le nombre est :', str(nombre))
     return nombre
 
 
@@ -3045,6 +3434,8 @@ def dragAndDropObject(dossier, x_plus, y_plus, side) :
             pyautogui.doubleClick(button='left') # double clic avec le bouton gauche
             find_image = True
             break
+
+    # popup("Trouver = " + dossier + " = " + str(find_image))
     return find_image
 
 def take_graines_charbons() :
@@ -3313,6 +3704,7 @@ def stay_in_live() :
         print(e) 
 
 def take_food_from_sac() :
+    popup("take_food_from_sac")
     
     # Ouvre l'équipement
     pushTheAction("sac", 50, 50)
@@ -3325,55 +3717,67 @@ def take_food_from_sac() :
     pushTheAction("croix", 50, 50)
 
 def test_if_find_image(dossier, x1, y1, x2, y2) :
-    # Capture d'écran partielle
-    x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
-    screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
-    cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/test_if_find_image.png', screenshot)
-
-    image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
-    image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
-
     find_image = False
-    for filepath in image_paths:
+    try : 
+        # Capture d'écran partielle
+        x1, y1, x2, y2 = x1*2, y1*2, x2*2, y2*2
+        screenshot = np.array(pyautogui.screenshot(region=(x1, y1, x2, y2)))
+        cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/test_if_find_image.png', screenshot)
+
+        image_dir = '/Users/thononpierre/Documents/Projet/Python/Project/LDOE/images/' + dossier
+        image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir)]
+
+        for filepath in image_paths:
+            # Lecture de l'image modèle
         # Lecture de l'image modèle
-    # Lecture de l'image modèle
-    # template = cv2.imread("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/template.png")
-        template = cv2.imread(filepath)
+        # template = cv2.imread("/Users/thononpierre/Documents/Projet/Python/Project/LDOE/template.png")
+            template = cv2.imread(filepath)
 
-        # Afficher la taille de l'image
-        print("dossier : ", dossier)
-        # print("Taille de l'image template : ", template.shape)
-        # print("Taille de l'image screenshot : ", screenshot.shape)
+            # Afficher la taille de l'image
+            # print("test_if_find_image : dossier : ", dossier)
+            # print("Taille de l'image template : ", template.shape)
+            # print("Taille de l'image screenshot : ", screenshot.shape)
 
-        # Conversion en niveaux de gris
-        gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
-        gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+            # Conversion en niveaux de gris
+            gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+            gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 
-        # Récupération des dimensions de l'image modèle
-        h, w = gray_template.shape
+            # Récupération des dimensions de l'image modèle
+            h, w = gray_template.shape
 
-        # Correspondance de modèle
-        result = cv2.matchTemplate(gray_screenshot, gray_template, cv2.TM_CCOEFF_NORMED)
+            # print(gray_screenshot)
+            # print(gray_template)
 
-        # Récupération de la position de la correspondance maximale
-        _, _, min_loc, max_loc = cv2.minMaxLoc(result)
-        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/test_if_find_image_gray_screenshot.png', gray_screenshot)
+            cv2.imwrite('/Users/thononpierre/Documents/Projet/Python/Project/LDOE/test_if_find_image_gray_template.png', gray_template)
 
-        # print (str(max_loc))
-        # print (str(min_loc))
-        print (str(max_val))
+            # print("test_if_find_image : after write ")
+            # Correspondance de modèle
+            result = cv2.matchTemplate(gray_screenshot, gray_template, cv2.TM_CCOEFF_NORMED)
 
-        if max_val >= 0.85:
-            find_image = True
-            print("Correspondance with the image = " + filepath)
-            break
+            # Récupération de la position de la correspondance maximale
+            _, _, min_loc, max_loc = cv2.minMaxLoc(result)
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
 
-        # # Affichage de la correspondance maximale
-        # cv2.rectangle(screenshot, max_loc, (max_loc[0] + w, max_loc[1] + h), (0, 0, 255), 2)
+            # print (str(max_loc))
+            # print (str(min_loc))
+            print (str(max_val))
 
-        # # Affichage de l'image résultat
-        # cv2.imshow("Result", screenshot)
-        # cv2.waitKey(0)
+            if max_val >= 0.85:
+                find_image = True
+                # popup("Correspondance with the image = " + filepath)
+                print("Correspondance with the image = " + filepath)
+                break
+
+            # # Affichage de la correspondance maximale
+            # cv2.rectangle(screenshot, max_loc, (max_loc[0] + w, max_loc[1] + h), (0, 0, 255), 2)
+
+            # # Affichage de l'image résultat
+            # cv2.imshow("Result", screenshot)
+            # cv2.waitKey(0)
+    except Exception as e:
+        # afficher l'exception, mais ne rien faire d'autre
+        print(e) 
 
     return find_image
 
@@ -3538,7 +3942,7 @@ def test_if_still_food(dossier) :
 
             # print (str(max_loc))
             # print (str(min_loc))
-            # print (str(max_val))
+            print (str(max_val))
 
             if max_val >= 0.8:
                 find_image = True
@@ -3654,7 +4058,52 @@ def stay_in_battle() :
 
     return stay
 
-def live_in_the_field() : 
+
+def take_food(live) :
+    if live <= 70 :
+        for i in range (0,3) :
+            pushTheAction("food_2", 50, 50)
+        for i in range (0,2) :
+            pushTheAction("food", 50, 50)
+    elif live <= 80 :
+        print("Je vais devoir prendre de la nouriture")
+        for i in range (0,3) :
+            pushTheAction("food_2", 50, 50)
+    elif live <= 90 :
+        print("Je vais devoir prendre de la nouriture")
+        for i in range (0,1) :
+            pushTheAction("food_2", 50, 50)
+        for i in range (0,2) :
+            pushTheAction("food", 50, 50)
+    elif live <= 100 :
+        print("Je vais devoir prendre de la nouriture")
+        for i in range (0,1) :
+            pushTheAction("food_2", 50, 50)
+    elif live <= 115 :
+        print("Je vais devoir prendre de la nouriture")
+        for i in range (0,1) :
+            pushTheAction("food", 50, 50)
+
+
+def live_in_the_field_2(queue, event, onlyBaies) :
+    i = 0
+    j = 0
+    while True :
+        live = extract_live()
+        try : 
+            if live <= 60 : 
+                for i in range (0,3) :
+                    pushTheAction("food_2", 50, 50)
+                break
+            else :
+                take_food(live)
+        
+        except Exception as e:
+            # afficher l'exception, mais ne rien faire d'autre
+            print(e) 
+    event.set()
+
+def live_in_the_field(onlyBaies) : 
     i = 0
     j = 0
     while True :
@@ -3665,75 +4114,67 @@ def live_in_the_field() :
                 j = j + 1
                 if j > 5 : 
                     break
-            if live <= 60 : 
-                for i in range (0,3) :
-                    pushTheAction("food_2", 50, 50)
-                run_outside_of_the_field()
-                break
-            elif live <= 70 :
-                for i in range (0,3) :
-                    pushTheAction("food_2", 50, 50)
-                for i in range (0,2) :
-                    pushTheAction("food", 50, 50)
-            elif live <= 80 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,3) :
-                    pushTheAction("food_2", 50, 50)
-            elif live <= 90 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,1) :
-                    pushTheAction("food_2", 50, 50)
-                for i in range (0,2) :
-                    pushTheAction("food", 50, 50)
-            elif live <= 100 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,1) :
-                    pushTheAction("food_2", 50, 50)
-            elif live <= 115 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,1) :
-                    pushTheAction("food", 50, 50)
-        
-        except Exception as e:
-            # afficher l'exception, mais ne rien faire d'autre
-            print(e) 
-
-def live_in_the_field_2() : 
-    i = 0
-    while True :
-        live = extract_live()
-        try : 
-            if not test_if_still_food("foods") :
-                take_food_from_sac()
-                i = i + 1
-                if i > 5 : 
+            if (onlyBaies) :
+                if live <= 60 : 
+                    for i in range (0,6) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,6) :
+                        pushTheAction("food", 50, 50)
+                    run_outside_of_the_field()
                     break
-            elif live <= 50 :
-                for i in range (0,4) :
-                    pushTheAction("food_2", 50, 50)
-                break
-            elif live <= 60 : 
-                for i in range (0,3) :
-                    pushTheAction("food_2", 50, 50)
-            elif live <= 70 :
-                for i in range (0,2) :
-                    pushTheAction("food_2", 50, 50)
-                for i in range (0,2) :
-                    pushTheAction("food", 50, 50)
-            elif live <= 80 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,2) :
-                    pushTheAction("food_2", 50, 50)
-            elif live <= 90 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,1) :
-                    pushTheAction("food_2", 50, 50)
-                for i in range (0,1) :
-                    pushTheAction("food", 50, 50)
-            elif live < 100 :
-                print("Je vais devoir prendre de la nouriture")
-                for i in range (0,1) :
-                    pushTheAction("food", 50, 50)
+                elif live <= 70 :
+                    for i in range (0,5) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,5) :
+                        pushTheAction("food", 50, 50)
+                elif live <= 80 :
+                    for i in range (0,4) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,4) :
+                        pushTheAction("food", 50, 50)
+                elif live <= 90 :
+                    for i in range (0,3) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,3) :
+                        pushTheAction("food", 50, 50)
+                elif live <= 100 :
+                    for i in range (0,2) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,2) :
+                        pushTheAction("food", 50, 50)
+                elif live <= 115 :
+                    print("Je vais devoir prendre de la nouriture")
+                    for i in range (0,1) :
+                        pushTheAction("food", 50, 50)
+            else :
+                if live <= 60 : 
+                    for i in range (0,3) :
+                        pushTheAction("food_2", 50, 50)
+                    run_outside_of_the_field()
+                    break
+                elif live <= 70 :
+                    for i in range (0,3) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,2) :
+                        pushTheAction("food", 50, 50)
+                elif live <= 80 :
+                    print("Je vais devoir prendre de la nouriture")
+                    for i in range (0,3) :
+                        pushTheAction("food_2", 50, 50)
+                elif live <= 90 :
+                    print("Je vais devoir prendre de la nouriture")
+                    for i in range (0,1) :
+                        pushTheAction("food_2", 50, 50)
+                    for i in range (0,2) :
+                        pushTheAction("food", 50, 50)
+                elif live <= 100 :
+                    print("Je vais devoir prendre de la nouriture")
+                    for i in range (0,1) :
+                        pushTheAction("food_2", 50, 50)
+                elif live <= 115 :
+                    print("Je vais devoir prendre de la nouriture")
+                    for i in range (0,1) :
+                        pushTheAction("food", 50, 50)
         
         except Exception as e:
             # afficher l'exception, mais ne rien faire d'autre
